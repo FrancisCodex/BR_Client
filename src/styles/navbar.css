@@ -1,0 +1,16 @@
+.navbar{
+    z-index: 9999;
+    background: transparent;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.card{
+    max-width: 350px;
+    max-height: 350px;
+}
+
+/* Styles for the white navbar after scrolling */
+.navbar.scrolled {
+background: white;
+/* Add other styles for the white navbar */
+}
