@@ -22,49 +22,53 @@ export default function Home() {
       title: "Property 1",
       description: "3 bedroom 1 bathroom apartment",
       image: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&q=80&w=1974&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      price: 500,
+      price: 5025.12,
       persons: 3,
       bathrooms: 1,
       floors: 1,
       type: "Apartment",
-      renter: "Donald Trump"
+      renter: "Donald Trump",
+      address: "1252 Golden State, Butuan City"
 
     },
     {
       id: 2,
       title: "Property 2",
-      description: "2 bedroom 2 bathroom deluxe apartment",
+      description: "4 bedroom 1 bathroom apartment, Shared Bathroom",
       image: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&q=80&w=1974&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      price: 482.23,
-      persons: 2,
-      bathrooms: 2,
-      floors: 2,
-      type: "Deluxe Apartment",
-      renter: "Gerald Oswalt"
+      price: 4500.51,
+      persons: 4,
+      bathrooms: 1,
+      floors: 1,
+      type: "Apartment",
+      renter: "Gerald Oswalt",
+      address: "1413 Libertad, Butuan City"
     },
     {
       id: 3,
       title: "Property 3",
       description: "2 bedroom 2 bathroom apartment",
       image: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&q=80&w=1974&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      price: 482.23,
+      price: 4800.42,
       persons: 2,
       bathrooms: 2,
-      floors: 2,
+      floors: 1,
       type: "Boarding House",
-      renter: "Gerald Oswalt"
+      renter: "Gerald Oswalt",
+      address: "2314 Los Angeles, Butuan City"
     },
     {
       id: 4,
       title: "Property 3",
       description: "2 bedroom 2 bathroom apartment",
       image: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&q=80&w=1974&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      price: 482.23,
-      persons: 2,
-      bathrooms: 2,
-      floors: 2,
+      price: 4850.23,
+      persons: 5,
+      bathrooms: 1,
+      floors: 1,
       type: "Boarding House",
-      renter: "Gerald Oswalt"
+      renter: "Gerald Oswalt",
+      address: "1521 New York Dakota, Butuan City"
     },
   ];
 

@@ -1,37 +1,44 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authenticating, setAuthenticating] = useState(true);
   const [user, setUser] = useState(null); // Store user data
 
   const logout = () => {
     // Remove the user's token from localStorage
     localStorage.removeItem("authToken");
-
+    setIsAuthenticated(false);
     // Redirect the user to the home page
     window.location.href = "/";
   };
 
   const authenticate = async () => {
-    // Implement your authentication logic here, e.g., by checking if the user is logged in.
-    // You can use a token stored in localStorage or cookies.
+
+    console.log("Authenticating...");
+    //using localstorage to put token and retrieve token
     const token = localStorage.getItem("authToken");
+    console.log("Token: ", token);
     if (token) {
-      // If the user is authenticated, fetch their data from the server
-      // Replace this with your actual API endpoint
-      const userData = await fetchUserDataFromServer(); // Implement this function
-      setUser(userData);
+      // const userData = await fetchUserDataFromServer(); // this function is to get user information of the user who logged in
+      // setUser(userData);
       setIsAuthenticated(true);
+      console.log("Authentication state2: ", isAuthenticated);
     }
+    setAuthenticating(false); 
   };
 
   useEffect(() => {
     authenticate();
   }, []);
+  
+  if(authenticating){
+   return <div>Loading....</div>;
+  }
 
   return (
     <AuthContext.Provider value={{ isAuthenticated, logout, user }}>
@@ -41,12 +48,14 @@ const AuthProvider = ({ children }) => {
 };
 
 const ProtectedPage = ({ children }) => {
-  const isAuthenticated = useContext(AuthContext);
+  const isAuthenticated = useContext(AuthContext).isAuthenticated;
   const token = localStorage.getItem("authToken");
 
-  if (!token) {
+  if (!isAuthenticated) {
     return <Navigate to="/auth/login" />;
   }
+
+  console.log("authentication state: ", isAuthenticated);
 
   return <div>{children}</div>;
 };

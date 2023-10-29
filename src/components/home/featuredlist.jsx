@@ -21,4 +21,3 @@ const Featuredlist = ({ property }) => {
   };
   
   export default Featuredlist;
-  

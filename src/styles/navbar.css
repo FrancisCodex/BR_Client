@@ -5,12 +5,16 @@
 }
 
 .card{
-    max-width: 350px;
-    max-height: 350px;
+    max-height: 500px;
 }
 
 /* Styles for the white navbar after scrolling */
 .navbar.scrolled {
 background: white;
 /* Add other styles for the white navbar */
+}
+
+
+.navbar.scrolled .colored{
+    color: black;
 }

@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import axios from 'axios'
-import logo from '../assets/logo_website.svg'
+import logo from '../assets/BoardRoomLogo_Light.svg'
 import loginbg from '../assets/bg/loginbg.jpg'
 import '../styles/signup.css'
 import 'react-toastify/dist/ReactToastify.css';

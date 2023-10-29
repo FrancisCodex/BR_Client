@@ -9,12 +9,12 @@ export default function Hero() {
             <h1 className="font-serif text-2xl md:text-3xl leading-tight text-center font-normal text-white mb-8">Find your perfect accommodation <br /> during the school year</h1>
             <div className="flex flex-wrap items-end -mx-3">
               <div className="w-full px-3 mb-6">
-                <label className="block uppercase tracking-wide text-white text-xs font-bold mb-2" htmlFor="grid-password">Houses</label>
-                <input className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-grey" id="grid-password" type="search" placeholder="two bed room apartment, four person apartment, near school" />
+                <label className="block uppercase tracking-wide text-white text-xs font-bold mb-2" htmlFor="grid-search">Search</label>
+                <input className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-grey" id="grid-password" type="search" placeholder="Search for properties" />
               </div>
               <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
                 <label className="block uppercase tracking-wide text-white text-xs font-bold mb-2" htmlFor="grid-city">City</label>
-                <input className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-grey" id="grid-city" type="text" placeholder="Santorini" />
+                <input className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-grey" id="grid-city" type="text" placeholder="Butuan City" />
               </div>
               <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
                 <label className="block uppercase tracking-wide text-white text-xs font-bold mb-2" htmlFor="grid-state">
