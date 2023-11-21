@@ -1,5 +1,5 @@
 # BoardRoom
-This is the Backend server for BoardRoom Application.
+This is the Frontend server for BoardRoom Application.
 
 ## Table of Contents
 
