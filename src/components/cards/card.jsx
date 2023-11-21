@@ -3,7 +3,7 @@ import React from "react";
 const Card = ({ property }) => {
   return (
     <>
-    <div className="">
+    <div className="pb-4">
       <div className="relative mx-auto w-full">
         <a href="#" className="relative inline-block duration-300 ease-in-out transition-transform transform hover:-translate-y-2 w-full">
           <div className="shadow p-4 rounded-lg bg-white">
@@ -19,8 +19,8 @@ const Card = ({ property }) => {
                     {property.persons}
                   </p>
                   <p className="flex items-center font-medium text-gray-800">
-                    <svg className="w-5 h-5 fill-current mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 512"><path d="M423.18 195.81l-24.94-76.58C387.51 86.29 356.81 64 322.17 64H157.83c-34.64 0-65.34 22.29-76.07 55.22L56.82 195.8C24.02 205.79 0 235.92 0 271.99V400c0 26.47 21.53 48 48 48h16c26.47 0 48-21.53 48-48v-16h256v16c0 26.47 21.53 48 48 48h16c26.47 0 48-21.53 48-48V271.99c0-36.07-24.02-66.2-56.82-76.18zm-310.99-66.67c6.46-19.82 24.8-33.14 45.64-33.14h164.34c20.84 0 39.18 13.32 45.64 33.13l20.47 62.85H91.72l20.47-62.84zM80 400c0 8.83-7.19 16-16 16H48c-8.81 0-16-7.17-16-16v-16h48v16zm368 0c0 8.83-7.19 16-16 16h-16c-8.81 0-16-7.17-16-16v-16h48v16zm0-80.01v32H32v-80c0-26.47 21.53-48 48-48h320c26.47 0 48 21.53 48 48v48zM104.8 248C78.84 248 60 264.8 60 287.95c0 23.15 18.84 39.95 44.8 39.95l10.14.1c39.21 0 45.06-20.1 45.06-32.08 0-24.68-31.1-47.92-55.2-47.92zm10.14 56c-3.51 0-7.02-.1-10.14-.1-12.48 0-20.8-6.38-20.8-15.95S92.32 272 104.8 272s31.2 14.36 31.2 23.93c0 7.17-10.53 8.07-21.06 8.07zm260.26-56c-24.1 0-55.2 23.24-55.2 47.93 0 11.98 5.85 32.08 45.06 32.08l10.14-.1c25.96 0 44.8-16.8 44.8-39.95 0-23.16-18.84-39.96-44.8-39.96zm0 55.9c-3.12 0-6.63.1-10.14.1-10.53 0-21.06-.9-21.06-8.07 0-9.57 18.72-23.93 31.2-23.93s20.8 6.38 20.8 15.95-8.32 15.95-20.8 15.95z" /></svg>
-                    {property.floors}
+                  <svg className="w-5 h-5 fill-current mr-2" viewBox="0 0 32.00 32.00" version="1.1" xmlns="http://www.w3.org/2000/svg" stroke="#000000" strokeWidth="0.128"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round" stroke="#CCCCCC" strokeWidth="6.4"></g><g id="SVGRepo_iconCarrier"> <title>door</title> <path d="M30 29.25h-3.279v-27.25c-0-0.414-0.336-0.75-0.75-0.75h-19.971c-0.414 0-0.75 0.336-0.75 0.75v0 27.25h-3.25c-0.414 0-0.75 0.336-0.75 0.75s0.336 0.75 0.75 0.75v0h28c0.414 0 0.75-0.336 0.75-0.75s-0.336-0.75-0.75-0.75v0zM6.75 29.25v-26.5h18.471v26.5zM20.48 15.46c-0.146 0.135-0.238 0.326-0.24 0.54v0c0 0.001-0 0.003-0 0.005 0 0.212 0.093 0.403 0.24 0.535l0.001 0.001c0.126 0.135 0.306 0.22 0.505 0.22 0.005 0 0.010-0 0.015-0h-0.001c0.204-0.001 0.388-0.085 0.519-0.22l0-0c0.142-0.138 0.232-0.328 0.24-0.539l0-0.001c-0.012-0.212-0.102-0.4-0.24-0.54l0 0c-0.136-0.126-0.319-0.203-0.52-0.203s-0.383 0.077-0.52 0.203l0-0z"></path> </g></svg>
+                    {property.rooms}
                   </p>
                   <p className="flex items-center font-medium text-gray-800">
                     <svg className="w-5 h-5 fill-current mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M504,256H64V61.25a29.26,29.26,0,0,1,49.94-20.69L139.18,65.8A71.49,71.49,0,0,0,128,104c0,20.3,8.8,38.21,22.34,51.26L138.58,167a8,8,0,0,0,0,11.31l11.31,11.32a8,8,0,0,0,11.32,0L285.66,65.21a8,8,0,0,0,0-11.32L274.34,42.58a8,8,0,0,0-11.31,0L251.26,54.34C238.21,40.8,220.3,32,200,32a71.44,71.44,0,0,0-38.2,11.18L136.56,18A61.24,61.24,0,0,0,32,61.25V256H8a8,8,0,0,0-8,8v16a8,8,0,0,0,8,8H32v96c0,41.74,26.8,76.9,64,90.12V504a8,8,0,0,0,8,8h16a8,8,0,0,0,8-8V480H384v24a8,8,0,0,0,8,8h16a8,8,0,0,0,8-8V474.12c37.2-13.22,64-48.38,64-90.12V288h24a8,8,0,0,0,8-8V264A8,8,0,0,0,504,256ZM228.71,76.9,172.9,132.71A38.67,38.67,0,0,1,160,104a40,40,0,0,1,40-40A38.67,38.67,0,0,1,228.71,76.9ZM448,384a64.07,64.07,0,0,1-64,64H128a64.07,64.07,0,0,1-64-64V288H448Z" /></svg>
@@ -40,7 +40,7 @@ const Card = ({ property }) => {
                 {property.address}
               </p>
             </div>
-            <div className="grid grid-cols-1 grid-rows-2 gap-4 mt-8">
+            <div className="grid grid-cols-1 grid-rows-1 gap-2 mt-5">
               <p className="inline-flex flex-col xl:flex-row xl:items-center text-gray-800">
                 <svg className="inline-block w-5 h-5 xl:w-4 xl:h-4 mr-3 fill-current text-gray-800" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M570.53,242,512,190.75V48a16,16,0,0,0-16-16H400a16,16,0,0,0-16,16V78.75L298.53,4a16,16,0,0,0-21.06,0L5.47,242a16,16,0,0,0,21.07,24.09L64,233.27V464a48.05,48.05,0,0,0,48,48H464a48.05,48.05,0,0,0,48-48V233.27l37.46,32.79A16,16,0,0,0,570.53,242ZM480,464a16,16,0,0,1-16,16H112a16,16,0,0,1-16-16V205.27l192-168,192,168Zm0-301.25-64-56V64h64ZM208,218.67V325.34A26.75,26.75,0,0,0,234.66,352H341.3A26.76,26.76,0,0,0,368,325.34V218.67A26.75,26.75,0,0,0,341.3,192H234.66A26.74,26.74,0,0,0,208,218.67ZM240,224h96v96H240Z" /></svg>
                 <span className="mt-2 xl:mt-0">
@@ -48,7 +48,7 @@ const Card = ({ property }) => {
                 </span>
               </p>
             </div>
-            <div className="grid grid-cols-2 grid-rows-1 gap-4">
+            <div className="grid grid-cols-2 grid-rows-1 gap-2 mt-5">
               <p className="inline-flex flex-col xl:flex-row xl:items-center text-gray-800">
                 <svg className="inline-block w-5 h-5 xl:w-4 xl:h-4 mr-3 fill-current text-gray-800" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M399.959 170.585c-4.686 4.686-4.686 12.284 0 16.971L451.887 239H60.113l51.928-51.444c4.686-4.686 4.686-12.284 0-16.971l-7.071-7.07c-4.686-4.686-12.284-4.686-16.97 0l-84.485 84c-4.686 4.686-4.686 12.284 0 16.971l84.485 84c4.686 4.686 12.284 4.686 16.97 0l7.071-7.07c4.686-4.686 4.686-12.284 0-16.971L60.113 273h391.773l-51.928 51.444c-4.686 4.686-4.686 12.284 0 16.971l7.071 7.07c4.686 4.686 12.284 4.686 16.97 0l84.485-84c4.687-4.686 4.687-12.284 0-16.971l-84.485-84c-4.686-4.686-12.284-4.686-16.97 0l-7.07 7.071z" /></svg>
                 <span className="mt-2 xl:mt-0">
@@ -62,10 +62,12 @@ const Card = ({ property }) => {
                 </span>
               </p>
             </div>
-            <div className="grid grid-cols-2 mt-8">
+            <div className="grid grid-cols-2 mt-5">
               <div className="flex items-center">
                 <div className="relative">
-                  <div className="rounded-full w-6 h-6 md:w-8 md:h-8 bg-gray-200" />
+                  <div className="">
+                    <img class="rounded-full w-6 h-6 md:w-8 md:h-8 bg-gray-200" src={property.realtor} alt="realtor" />
+                  </div>
                   <span className="absolute top-0 right-0 inline-block w-3 h-3 bg-primary-red rounded-full" />
                 </div>
                 <p className="ml-2 text-gray-800 line-clamp-1">

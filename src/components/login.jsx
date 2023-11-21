@@ -3,6 +3,7 @@ import axios from 'axios';
 import logo from '../assets/BoardRoomLogo_Light.svg'
 import loginbg from '../assets/bg/loginbg.jpg'
 import Cookies from "js-cookie"
+import Footer from './footer';
 
 
 export default function Login() {
@@ -26,15 +27,20 @@ export default function Login() {
       // Make a POST request to your backend API for login
       const response = await axios.post("http://localhost:8080/api/user/login", formData);
 
+
       const token = response.data.token;
+      const accessToken = response.data.accessToken;
+
+      console.log("The formData: ", response);
 
       console.log("the Response: ", token);
       // Assuming your API returns a success message and a token
       if (response.status === 200) {
         // Store the token in a secure way (e.g., localStorage or cookies)
-        localStorage.setItem('authToken', token, { expires: 1 / 24 });
+        Cookies.set('token', token, { expires: 7 });
+        localStorage.setItem('accessToken', accessToken);
         console.log('login successfully');
-        window.location.href = '/user/profile';
+        window.location.href = '/';
         // Redirect to a protected route or dashboard
       } else {
         // Handle authentication failure (show an error message)

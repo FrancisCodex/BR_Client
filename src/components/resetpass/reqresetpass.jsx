@@ -1,91 +1,42 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import axios from 'axios'
-import logo from '../assets/BoardRoomLogo_Light.svg'
-import loginbg from '../assets/bg/loginbg.jpg'
-import '../styles/signup.css'
-import 'react-toastify/dist/ReactToastify.css';
-import { ToastContainer, toast } from 'react-toastify';
+import { useLocation } from 'react-router-dom'
 
+function Reqresetpass() {
+    const [error, setError] = useState(null);
 
-export default function Signup() {
-
-
-
-  const [password, setPassword] = useState('');
-  const [passwordError, setPasswordError] = useState('');
-
-  const [registrationData, setRegistrationData] = useState({
-    firstname: '',
-    lastname: '',
-    email: '',
-    password: '',
+  const [formData, setFormData] = useState({
+    email: "",
   });
 
-  // Function to handle password input changes
-  const handlePasswordChange = (e) => {
-    const newPassword = e.target.value;
-    setPassword(newPassword);
-
-    // This is to set password rules such as min 8 characters and max 8, and at least have 1 uppercase letter
-    if (newPassword.length < 8 || newPassword.length > 15) {
-      setPasswordError('Password must be between 8 and 15 characters');
-    } else if (!/[A-Z]/.test(newPassword)) {
-      setPasswordError('Password must contain at least one uppercase letter');
-    } else {
-      setPasswordError('');
-    }
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
   };
 
-
-  const handleRegistration = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:8080/api/user/register', registrationData);
-      console.log('Response from the server:', response.data);
+      // Make a POST request to your backend API for login
+      const response = await axios.post("http://localhost:8080/api/user/reqresetpass", formData);
 
-      if (response.data.success) {
-        // Registration was successful, you can redirect the user or show a success message.
-        console.log('Registration Success!');
-        localStorage.setItem('token', response.data.token);
-        window.location.href = '/auth/login';
+      if (response.status === 200) {
+
+        console.log("Password reset request successful");
+        window.location.href = '/auth/profile';
+        // Redirect to a protected route or dashboard
+      } else {
+        // Handle authentication failure (show an error message)
+         console.error("Password reset request failed:", response.data.message);
       }
     } catch (error) {
-      if (error.response) {
-        // Server responded with an error, log the error response
-        console.error("Error response2:", error.response.data);
-        if (error.response.data.message === 'Email already exists') {
-          setPasswordError('Email is already registered');
-          toast.error('Email is already registered', {
-            position: 'top-center',
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
-        } else {
-          // Handle other error cases here
-          console.error('Registration error2:', response.data.message);
-        }
-      } else {
-        // An error occurred before receiving a response, log the general error
-        console.error("Error occurred:", error);
-      }
+      console.error("Error occurred:", error);
     }
   };
 
-  // Function to handle changes in input fields and update the registrationData state
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setRegistrationData({ ...registrationData, [name]: value });
-  };
-
-
   return (
     <div>
-      <ToastContainer/>
         <section className="min-h-screen flex items-stretch text-white ">
         <div className="lg:flex w-1/2 hidden bg-gray-500 bg-no-repeat bg-cover relative items-center custom-bg">
           <div className="absolute bg-black opacity-60 inset-0 z-0" />
@@ -112,10 +63,10 @@ export default function Signup() {
           <div className="w-full py-6 z-20">
             <h1 className="my-7">
                 {/* Logo Image */}
-              <a href="/"><img src={logo} alt="BoardRoom Logo" className='inline-flex' /></a>
+                <a href="/"><img src={logo} alt="BoardRoom Logo" className='inline-flex' /></a>
             </h1>
             <h2 className='text-4xl'>
-                Sign Up
+                Login
             </h2>
             <div className="py-6 space-x-2">
               <a href="https://www.facebook.com"><span className="w-10 h-10 items-center justify-center inline-flex rounded-full font-bold text-lg border-2 border-white">f</span></a>
@@ -125,39 +76,21 @@ export default function Signup() {
             <p className="text-gray-100">
               or use email your account
             </p>
-            <form onSubmit={handleRegistration} className="sm:w-2/3 w-full px-4 lg:px-0 mx-auto"> {/* action="/profile" */}
-              <div className="pb-1 pt-3">
-                <input onChange={handleInputChange} value={registrationData.firstname} type="text" name="firstname" id="firstname" placeholder="First Name" className="block w-full p-4 text-lg rounded-sm bg-black" required/>
+            <form onSubmit={handleSubmit} action="/profile" className="sm:w-2/3 w-full px-4 lg:px-0 mx-auto">
+              <div className="pb-2 pt-4">
+                <input value={formData.email} onChange={handleChange} type="email" name="email" id="email" placeholder="Email" className="block w-full p-4 text-lg rounded-sm bg-black" />
               </div>
-              <div className="pb-1 pt-3">
-                <input onChange={handleInputChange} value={registrationData.lastname} type="text" name="lastname" id="lastname" placeholder="Last Name" className="block w-full p-4 text-lg rounded-sm bg-black" required />
+              <div className="pb-2 pt-4">
+                <input value={formData.password} onChange={handleChange} className="block w-full p-4 text-lg rounded-sm bg-black" type="password" name="password" id="password" placeholder="Password" />
               </div>
-              <div className="pb-1 pt-3">
-                <input onChange={handleInputChange} value={registrationData.email} type="email" name="email" id="email" placeholder="Email" className="block w-full p-4 text-lg rounded-sm bg-black" required />
+              <div className="text-right text-gray-400 hover:underline hover:text-gray-100">
+                <a href="#">Forgot your password?</a>
               </div>
-              <div className="pb-1 pt-3">
-              <input
-                  type="password"
-                  name="password"
-                  id="password"
-                  placeholder="Password"
-                  value={registrationData.password} // Update this line
-                  onChange={handleInputChange}
-                  className="block w-full p-4 text-lg rounded-sm bg-black"
-                  maxLength={15}
-                  minLength={8}
-                  pattern="(?=.*[A-Z]).{8,}"
-                />
-                </div>
-                {passwordError && <p className="text-red-500">{passwordError}</p>}
-
               <div className="px-4 pb-2 pt-4">
-                <button type="submit" className="uppercase block w-full p-4 text-lg rounded-full bg-green-700 hover:bg-green-800 focus:outline-none">
-                  Sign up
-                </button>
+                <button className="uppercase block w-full p-4 text-lg rounded-full bg-green-700 hover:bg-green-800 focus:outline-none">sign in</button>
               </div>
               <div className="text-center text-gray-400 hover:underline hover:text-gray-100">
-                <a href="/auth/login">Already Registered? Login Here</a>
+                <a href="/register">New User? Signup now!</a>
               </div>
               <div className="p-4 text-center right-0 left-0 flex justify-center space-x-4 mt-16 lg:hidden ">
                 <a href="#">
@@ -177,3 +110,5 @@ export default function Signup() {
     </div>
   )
 }
+
+export default Reqresetpass

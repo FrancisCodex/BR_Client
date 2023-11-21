@@ -2,18 +2,16 @@ import React, {useState, useEffect, useContext} from 'react'
 import logo from '../../assets/BoardRoomLogo.svg'
 import notextlogo from '../../assets/BoardRoom_Logo_notext.svg'
 import { AuthContext } from '../authentication/AuthProvider'
-import axios from 'axios'
 import '../../styles/navbar.css'
 
-export default function Navbar() {
+export default function Navigation() {
     const token = localStorage.getItem('authToken');
     const isAuthenticated = useContext(AuthContext).isAuthenticated;
     const { logout } = useContext(AuthContext);
 
     const [isDropdownMenuOpen, setIsDropdownMenuOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
-      
-      
+  
     const toggleDropdownMenu = () => {
       setIsDropdownMenuOpen(!isDropdownMenuOpen);
     };
@@ -38,34 +36,54 @@ export default function Navbar() {
 
   return (
     <div>
-        {/* component */}
-        <nav className={`navbar  w-full flex fixed justify-between items-center mx-auto px-8 h-20 ${navbarClass} backdrop-filter backdrop-blur-[4px] bg-white/20`}>
+      {/* component */}
+      <nav className={`navbar ${navbarClass} px-3 w-full flex justify-between items-center mx-auto h-20 backdrop-filter backdrop-blur-[4px] bg-white/20`}>
         {/* logo */}
         <div className="inline-flex">
-            
-            <a className="_o6689fn" href="/"><div className="hidden md:block">
-            <img src={logo} alt="BoardRoom Logo" className='inline-flex block'width={150} height={32} style={{display: 'block'}}/>
+          {/* Logo */}
+          <a className="_o6689fn" href="/">
+            <div className="hidden md:block">
+              <img
+                src={logo}
+                alt="BoardRoom Logo"
+                className="inline-flex block"
+                width={150}
+                height={32}
+                style={{ display: 'block' }}
+              />
             </div>
             <div className="block md:hidden">
-                <img src={notextlogo} alt="BoardRoom Logo Hidden" width={100} height={32} className='inline-flex block'/>
+              <img
+                src={notextlogo}
+                alt="BoardRoom Logo Hidden"
+                width={100}
+                height={32}
+                className="inline-flex block"
+              />
             </div>
-            </a>
+          </a>
         </div>
         {/* end logo */}
 
         {/* The Catalog */}
         {isAuthenticated ? (
-            <>
+          <>
             <div className="flex justify-between inline-flex hidden md:block">
-            <div className=''>
-                <ul className='flex gap-5'>
-                    <a href="/"><li>Home</li></a>
-                    <a href="/listings"><li>Listing</li></a>
-                    <a href="/user/profile"><li>Profile</li></a>
+              <div className="">
+                <ul className="flex gap-5">
+                  <a href="/">
+                    <li>Home</li>
+                  </a>
+                  <a href="/listings">
+                    <li>Listing</li>
+                  </a>
+                  <a href="/user/profile">
+                    <li>Profile</li>
+                  </a>
                 </ul>
+              </div>
             </div>
-        </div>
-        </>
+          </>
         ):(
         <>
         {/* Empty HTML Display none when the user is not authenticated*/}
@@ -113,7 +131,7 @@ export default function Navbar() {
                 </div>
             </button>
             {isDropdownMenuOpen && (
-                                <div className="dropdown-menu absolute top-full left-0 z-10 w-48 rounded-md bg-white shadow-lg">
+                                <div className="dropdown-menu absolute top-full z-10 rounded-md bg-white shadow-lg">
                                     <ul className="py-1 text-sm text-gray-700">
                                         {isAuthenticated ? (
                                             // Display "Profile" and "Logout" when authenticated

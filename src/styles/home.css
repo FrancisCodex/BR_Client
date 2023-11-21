@@ -1,0 +1,21 @@
+/* Home page */
+
+@media (max-width: 768px) {
+    /* Hide grid layout on mobile devices */
+    .featured-listings-container .grid {
+      display: none;
+    }
+  
+    /* Create a mobile-friendly slider using CSS flexbox */
+    .featured-listings-container {
+      display: flex;
+      flex-direction: column;
+      overflow-x: auto;
+    }
+  
+    .featured-listings-container .card {
+      flex: 0 0 100%; /* Make each card full width on mobile */
+      margin: 10px 0; /* Add spacing between cards */
+    }
+  }
+  
