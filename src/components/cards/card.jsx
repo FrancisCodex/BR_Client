@@ -79,7 +79,7 @@ const Card = ({ property }) => {
                   <span className="text-sm uppercase">
                   &#8369;
                   </span>
-                  <span className="text-lg">{property.price}</span>/m
+                  <span className="text-lg">{property.price}</span>
                 </p>
               </div>
             </div>

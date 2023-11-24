@@ -131,7 +131,7 @@ export default function Navigation() {
                 </div>
             </button>
             {isDropdownMenuOpen && (
-                                <div className="dropdown-menu absolute top-full z-10 rounded-md bg-white shadow-lg">
+                                <div className="dropdown-menu absolute top-full right-0 z-10 w-48 rounded-md bg-white shadow-lg">
                                     <ul className="py-1 text-sm text-gray-700">
                                         {isAuthenticated ? (
                                             // Display "Profile" and "Logout" when authenticated

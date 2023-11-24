@@ -3,9 +3,9 @@ import logotext from '../assets/BoardRoom_text.svg'
 export default function Footer() {
   return (
     <div>
-        <div className="flex items-end w-full  bg-white">
+        <div className="flex items-end w-full  bg-white pt-14">
             <footer className="w-full text-gray-700 bg-gray-100 body-font">
-                <div className="container flex flex-col flex-wrap px-5 py-24 mx-auto md:items-center lg:items-start md:flex-row md:flex-no-wrap">
+                <div className="container flex flex-col flex-wrap px-5 py-14 mx-auto md:items-center lg:items-start md:flex-row md:flex-no-wrap">
                 <div className="flex-shrink-0 w-64 mx-auto text-center md:mx-0 md:text-left">
                     <a className=" flex items-center justify-center font-medium text-gray-900 title-font md:justify-start">
                     <h1 className='text-2xl'>

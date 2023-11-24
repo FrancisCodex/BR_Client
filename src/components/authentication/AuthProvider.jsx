@@ -19,7 +19,7 @@ const AuthProvider = ({ children }) => {
       // Decode the access token to get the user ID
       const decoded = jwtDecode(accessToken);
       console.log("What is the decoded token: ", decoded);
-      const response = await instance.get('/api/user/userdata');
+      const response = await instance.get('/api/userdata');
   
       if (response.status === 200) {
 

@@ -10,6 +10,7 @@ import Listings from './components/properties/listings'
 import Errorpage from './components/errorpage'
 import Mapdef from './components/map/mapdef'
 import Verifyemail from './components/verifyemail'
+import Mapcontainer from './components/map/mapcontainer'
 
 
 function App() {
@@ -24,19 +25,17 @@ function App() {
             <Route path='/' element={<Home/>}/>
             <Route path='/auth/login' element={<Login/>}/>
             <Route path='/register' element={<Signup/>}/>
-            <Route path='/map' element={<Mapdef/>}/>
-
-            {/* Email Links */}
-            <Route path='/user/verify' element={<Verifyemail/>}/>
+            <Route path='/property-manager/register' element={<OwnerRegister/>}/>
 
             {/* Protected Routes */}
             <Route path='/user/profile' element={<ProtectedPage> <Profile /> </ProtectedPage>} />
-            <Route path='/property-manager/register' element={<ProtectedPage> <OwnerRegister/> </ProtectedPage>} />
             <Route path='/property-manager/profile' element={<ProtectedPage> <OwnerRegister/> </ProtectedPage>} />
             <Route path='/listings' element={<ProtectedPage> <Listings/> </ProtectedPage>}/>
+            <Route path='/map' element={<Mapcontainer/>}/>
 
             {/* Routes that take Parameters */}
             <Route path='/user/verified' element={<Verifyemail/>}/>
+
 
 
             {/* Footer Links */}

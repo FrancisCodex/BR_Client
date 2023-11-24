@@ -7,6 +7,10 @@ const Profile = () => {
   const user = useContext(AuthContext).user;
   console.log("What is this authentication part?: ", user);
 
+  function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
   const formattedDate = new Date(user.accountCreatedAt).toLocaleDateString();
   return (
     <ProtectedPage>
@@ -22,7 +26,7 @@ const Profile = () => {
             <img className="h-50 w-50 rounded mx-auto" src="https://images.pexels.com/photos/1040881/pexels-photo-1040881.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="profile image" />
           </div>
           <h1 className="text-gray-900 font-bold text-xl leading-8 my-1">{user.firstName} {user.lastName}</h1>
-          <h3 className="text-gray-600 font-lg text-semibold leading-6">Student</h3>
+          <h3 className="text-gray-600 font-lg font-semibold leading-6">{capitalizeFirstLetter(user.role)}</h3>
           <p className="text-sm text-gray-500 hover:text-gray-600 leading-6">Lorem ipsum dolor sit amet
             consectetur adipisicing elit.
             Reprehenderit, eligendi dolorum sequi illum qui unde aspernatur non deserunt</p>
@@ -60,14 +64,10 @@ const Profile = () => {
             <span className="tracking-wide">About</span>
           </div>
           <div className="text-gray-700">
-            <div className="grid md:grid-cols-2 text-sm">
+            <div className="grid md:grid-cols-2 text-sm break-words">
               <div className="grid grid-cols-2">
-                <div className="px-4 py-2 font-semibold">First Name</div>
-                <div className="px-4 py-2">{user.firstName}</div>
-              </div>
-              <div className="grid grid-cols-2">
-                <div className="px-4 py-2 font-semibold">Last Name</div>
-                <div className="px-4 py-2">{user.lastName}</div>
+                <div className="px-4 py-2 font-semibold ">Full Name</div>
+                <div className="px-4 py-2">{user.firstName} {user.lastName}</div>
               </div>
               <div className="grid grid-cols-2">
                 <div className="px-4 py-2 font-semibold">Gender</div>
@@ -80,10 +80,6 @@ const Profile = () => {
               <div className="grid grid-cols-2">
                 <div className="px-4 py-2 font-semibold">Current Address</div>
                 <div className="px-4 py-2">Beech Creek, PA, Pennsylvania</div>
-              </div>
-              <div className="grid grid-cols-2">
-                <div className="px-4 py-2 font-semibold">Permanant Address</div>
-                <div className="px-4 py-2">Arlington Heights, IL, Illinois</div>
               </div>
               <div className="grid grid-cols-2">
                 <div className="px-4 py-2 font-semibold">Email.</div>
@@ -103,7 +99,10 @@ const Profile = () => {
       </div>
       </div>
     </div>
-      <Footer/>
+    <div className="pt-14">
+      <Footer/>         
+    </div>
+      
       </div>
     </ProtectedPage>
   );

@@ -117,14 +117,6 @@ export default function Signup() {
             <h2 className='text-4xl'>
                 Sign Up
             </h2>
-            <div className="py-6 space-x-2">
-              <a href="https://www.facebook.com"><span className="w-10 h-10 items-center justify-center inline-flex rounded-full font-bold text-lg border-2 border-white">f</span></a>
-              <a href="https://www.gmail.com"><span className="w-10 h-10 items-center justify-center inline-flex rounded-full font-bold text-lg border-2 border-white">G+</span></a>
-              <a href="https://www.linkedin.com"><span className="w-10 h-10 items-center justify-center inline-flex rounded-full font-bold text-lg border-2 border-white">in</span></a>
-            </div>
-            <p className="text-gray-100">
-              or use email your account
-            </p>
             <form onSubmit={handleRegistration} className="sm:w-2/3 w-full px-4 lg:px-0 mx-auto"> {/* action="/profile" */}
               <div className="pb-1 pt-3">
                 <input onChange={handleInputChange} value={registrationData.firstname} type="text" name="firstname" id="firstname" placeholder="First Name" className="block w-full p-4 text-lg rounded-sm bg-black" required/>
