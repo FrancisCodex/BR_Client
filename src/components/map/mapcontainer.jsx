@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import Map, {FullscreenControl, GeolocateControl, NavigationControl, Marker, Popup, Layer} from 'react-map-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
+import markericon from '../../assets/marker.svg'
 
 const Mapcontainer = () => {
 
@@ -54,7 +55,7 @@ const Mapcontainer = () => {
   const MapBoxToken = import.meta.env.VITE_MAPBOX_API;
 
   return (
-    <div className='leaflet-container'>
+    <div className='leaflet-container h-96'>
      <Map
       mapboxAccessToken={MapBoxToken}
       {...viewport}
@@ -65,8 +66,8 @@ const Mapcontainer = () => {
       <FullscreenControl />
       <GeolocateControl />
       <NavigationControl /> 
-      <Marker latitude={properties[1].latitude} longitude={properties[1].longitude} offsetLeft={-20} offsetTop={-10}>
-        <img src=".." alt={properties[1].address} />
+      <Marker draggable latitude={properties[1].latitude} longitude={properties[1].longitude} offsetLeft={-20} offsetTop={-10}>
+        <img src={markericon} alt={properties[1].address} width={30} />
       </Marker>
     </Map>
 

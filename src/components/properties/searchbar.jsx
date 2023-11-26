@@ -83,13 +83,12 @@ const Searchbar = () => {
               </div>
               <div className="w-full md:w-1/6 px-3 mb-6 md:mb-0">
                   <div className="relative">
-                    <button className='font-bold leading-tight bg-red hover:bg-red-light border border-black hover:border-red-light w-full uppercase tracking-wide py-3 px-4 rounded'
+                    <button className='font-bold leading-tight bg-red hover:bg-red-light border border-green-400 hover:border-red-light w-full uppercase tracking-wide py-3 px-4 rounded'
                     onClick={() => setIsDropdownMenuOpen4(!isDropdownMenuOpen4)}>
                       Property Type
                     </button>
                     {isDropdownMenuOpen4 && (
-                                <div className="dropdown-menu absolute top-full right-0 z-10 w-full rounded-md  bg-white shadow-lg">
-                                  <input type="text" />
+                                <div className="dropdown-menu border border-green-400 absolute top-full right-0 z-10 w-full rounded-md  bg-white shadow-lg">
                                     <ul className="py-1 text-sm text-gray-700">
                                         <li>
                                             <a href="#" className="block px-4 py-2 hover-bg-gray-100">Boarding House</a>

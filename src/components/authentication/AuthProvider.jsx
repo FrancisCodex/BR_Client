@@ -12,6 +12,13 @@ const AuthProvider = ({ children }) => {
   const [authenticating, setAuthenticating] = useState(true);
   const [user, setUser] = useState(null); // Store user data
 
+
+  const ROLE_COMBINATIONS = {
+  GENERAL: ['admin', 'owner', 'user'],
+  MANAGERS: ['admin', 'owner'],
+  ADMIN: ['admin']
+};
+
   const fetchUserData = async (accessToken) => {
 
     console.log("Fetching user Data: ", accessToken);
@@ -98,9 +105,7 @@ const ProtectedPage = ({ children }) => {
   if (!isAuthenticated) {
     return <Navigate to="/auth/login" />;
   }
-
-  console.log("authentication state: ", isAuthenticated);
-
+  
   return <div>{children}</div>;
 };
 

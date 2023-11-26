@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import logo from '../assets/BoardRoomLogo_Light.svg'
 import loginbg from '../assets/bg/loginbg.jpg'
 import Cookies from "js-cookie"
 import Footer from './footer';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
+import { jwtDecode } from 'jwt-decode';
 
 
 export default function Login() {
@@ -19,40 +23,60 @@ export default function Login() {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-
+  const navigate = useNavigate();
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       // Make a POST request to your backend API for login
       const response = await axios.post("http://localhost:8080/api/user/login", formData);
-
-
+    
       const token = response.data.token;
       const accessToken = response.data.accessToken;
 
-      console.log("The formData: ", response);
+      const decodedToken = jwtDecode(token);
 
+      console.log(decodedToken.role);
+    
+      console.log("The formData: ", response);
       console.log("the Response: ", token);
-      // Assuming your API returns a success message and a token
-      if (response.status === 200) {
-        // Store the token in a secure way (e.g., localStorage or cookies)
-        Cookies.set('token', token, { expires: 7 });
-        localStorage.setItem('accessToken', accessToken);
-        console.log('login successfully');
-        window.location.href = '/';
-        // Redirect to a protected route or dashboard
-      } else {
-        // Handle authentication failure (show an error message)
-        console.error("Authentication failed.");
+    
+      if(response.status === 200){
+      // Store the token in a secure way (e.g., localStorage or cookies)
+      Cookies.set('token', token, { expires: 7 });
+      localStorage.setItem('accessToken', accessToken);
+      console.log('login successfully');
+      // window.location.href = '/';
+      toast.success("Login successfully!");
+      // Redirect to a protected route or dashboard
+      // if the user role is renter, redirect to home page
+      setTimeout(() => {
+        if (decodedToken.role === 'renter') {
+          navigate('/');
+        } else if (decodedToken.role === 'owner') { //if the user role is owner, redirect to owner dashboard
+          navigate('/property-manager/dashboard');
+        } else if (decodedToken.role === 'admin') { //if the user role is admin, redirect to admin dashboard
+          navigate('/admin/dashboard');
+        }
+      }, 2000);
       }
+      
     } catch (error) {
       console.error("Error occurred:", error);
+      if (error.response && error.response.status === 401) {
+        // Handle authentication failure (show an error message)
+        toast.error("Wrong email or password.");
+        console.error("Authentication failed.");
+      } else {
+        toast.error("An error occurred.");
+      }
     }
   };
   
   return (
     <div>
+      <ToastContainer />
         <section className="min-h-screen flex items-stretch text-white ">
         <div className="lg:flex w-1/2 hidden bg-gray-500 bg-no-repeat bg-cover relative items-center custom-bg">
           <div className="absolute bg-black opacity-60 inset-0 z-0" />
