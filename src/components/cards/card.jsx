@@ -66,7 +66,7 @@ const Card = ({ property }) => {
               <div className="flex items-center">
                 <div className="relative">
                   <div className="">
-                    <img class="rounded-full w-6 h-6 md:w-8 md:h-8 bg-gray-200" src={property.realtor} alt="realtor" />
+                    <img className="rounded-full w-6 h-6 md:w-8 md:h-8 bg-gray-200" src={property.realtor} alt="realtor" />
                   </div>
                   <span className="absolute top-0 right-0 inline-block w-3 h-3 bg-primary-red rounded-full" />
                 </div>

@@ -3,17 +3,21 @@ import logo from '../../assets/BoardRoomLogo.svg'
 import notextlogo from '../../assets/BoardRoom_Logo_notext.svg'
 import { AuthContext } from '../authentication/AuthProvider'
 import axios from 'axios'
+import { jwtDecode } from 'jwt-decode'
 import '../../styles/navbar.css'
+import Cookies from 'js-cookie'
 
 export default function Navbar() {
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem('accessToken');
     const isAuthenticated = useContext(AuthContext).isAuthenticated;
     const { logout } = useContext(AuthContext);
 
     const [isDropdownMenuOpen, setIsDropdownMenuOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
-      
-      
+    
+
+    
+
     const toggleDropdownMenu = () => {
       setIsDropdownMenuOpen(!isDropdownMenuOpen);
     };
@@ -77,9 +81,19 @@ export default function Navbar() {
         <div className="flex-initial">
             <div className="flex justify-end items-center relative">
             <div className="flex mr-4 items-center">
-                <a className="inline-block py-1 px-2 hover:bg-gray-200 rounded-full colored" href="/property-manager/register">
+
+                { isAuthenticated ? (<>
+                    <a className="inline-block py-1 px-2 hover:bg-gray-200 rounded-full colored" href="/property-manager/dashboard">
+                    <div className="flex items-center relative cursor-pointer whitespace-nowrap">Manage Properties</div>
+                    </a>
+                
+                </>
+                ) : (<>
+                  <a className="inline-block py-1 px-2 hover:bg-gray-200 rounded-full colored" href="/property-manager/register">
                 <div className="flex items-center relative cursor-pointer whitespace-nowrap">List Property</div>
                 </a>
+                </>
+                )}
                 <div className="block relative">
                 <button type="button" className="inline-block py-2 px-3 hover:bg-gray-200 rounded-full relative">
                     <div className="flex items-center h-5">

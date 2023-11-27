@@ -49,9 +49,8 @@ const Mapcontainer = () => {
     zoom: 14,
   });
 
+  //8.96053253724293, 125.59426993904168
 
-  console.log("what is the latitude?: ", properties[1].latitude)
-  console.log("What is the longitude?: ", properties[1].longitude)
   const MapBoxToken = import.meta.env.VITE_MAPBOX_API;
 
   return (

@@ -17,6 +17,7 @@ import Unauthorized from './components/unauthorized'
 import OwnerDashboard from './components/roles/owners/ownerDashboard'
 import RoleCheck from './components/authentication/roleCheck'
 import { ThemeProvider } from "@material-tailwind/react";
+import Testupload from './components/roles/owners/testupload'
 
 
 function App() {
@@ -56,7 +57,7 @@ function App() {
               
               
               {/* Footer Links */}
-              
+              <Route path='/test' element={<Testupload/>}/>
 
 
               {/* Error 404 Page */}

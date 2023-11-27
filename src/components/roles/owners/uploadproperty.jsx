@@ -1,17 +1,55 @@
-import React, {useState} from 'react'
+import React, {useState, useRef} from 'react'
 import Navbar from '../../navbar/navbar'
 import Mapcontainer from '../../map/mapcontainer'
 import { Checkbox } from "@material-tailwind/react";
 import Footer from '../../footer';
+import { ToastContainer, toast } from 'react-toastify';
+import axios from 'axios';
+import usePropertyForm from '../../../hooks/usePropertyForm';
 
 const Uploadproperty = () => {
-  const [selectedFile, setSelectedFile] = useState(null);
+  const token = localStorage.getItem('accessToken');
+  const fileInput = useRef();
+  const {
+    formData,
+    selectedFile,
+    handleAmenityChange,
+    handleFileChange,
+    handleChange,
+  } = usePropertyForm();
 
-  const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    const { selectedFile, selectedAmenities, ...restFormData } = formData;
+
+    const formDataToSend = new FormData();
+    formDataToSend.append('images', selectedFile);
+
+    Object.entries(restFormData).forEach(([key, value]) => {
+      formDataToSend.append(key, value);
+    });
+
+    selectedAmenities.forEach((amenity, index) => {
+      formDataToSend.append(`amenities[${index}]`, amenity);
+    });
+
+    try {
+      const response = await axios.post('http://localhost:8080/api/property/upload', formDataToSend, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.status === 200) {
+        console.log('File uploaded successfully');
+        toast.success("Property uploaded successfully!");
+      }
+    } catch (error) {
+      toast.error("Property upload failed!");
+      console.error('File upload failed', error);
+    }
   };
-
-
   return (
     <div>
       <div className='h-fit pb-12'>
@@ -22,42 +60,37 @@ const Uploadproperty = () => {
           <div className='mb-5'>
               <h1 className="text-3xl font-semibold text-green-900">Upload Property</h1>
           </div>
-            <form action="#">
-              <div className="mb-5">
-                <label htmlFor="title" className="mb-3 block text-base font-medium text-green-900">
-                  Title
-                </label>
-                <input required type="text" name="title" id="title" placeholder="Enter Property Title" className="w-full rounded-md border border-green-400 bg-white py-3 px-6 text-base font-medium text-black outline-none focus:border-[#6A64F1] focus:shadow-md" />
-              </div>
+            <form action="#" onSubmit={handleSubmit}>
+                <div className="mb-5">
+                  <label htmlFor="type" className="mb-3 block text-base font-medium text-green-900">
+                    Property Type
+                  </label>
+                  <input onChange={handleChange}  value={formData.type} type="text" name="type" id="type" placeholder="Property Type eg (Apartment, Boarding House, Room ...)" className="w-full rounded-md border border-green-400 bg-white py-3 px-6 text-base font-medium text-black outline-none focus:border-[#6A64F1] focus:shadow-md" />
+                </div>
               <div className="mb-5">
                 <label htmlFor="address" className="mb-3 block text-base font-medium text-green-900">
                   Property Address
                 </label>
-                <input required type="text" name="address" id="address" placeholder="Enter your Property Address" className="w-full rounded-md border border-green-400 bg-white py-3 px-6 text-base font-medium text-black outline-none focus:border-[#6A64F1] focus:shadow-md" />
+                <input onChange={handleChange}   value={formData.address} required type="text" name="address" id="address" placeholder="Enter your Property Address" className="w-full rounded-md border border-green-400 bg-white py-3 px-6 text-base font-medium text-black outline-none focus:border-[#6A64F1] focus:shadow-md" />
               </div>
               <div className="mb-5">
                 <label htmlFor="address" className="mb-3 block text-base font-medium text-green-900">
                   Address 2
                 </label>
-                <input type="text" name="address" id="address" placeholder="Enter your Property Address 2" className="w-full rounded-md border border-green-400 bg-white py-3 px-6 text-base font-medium text-black outline-none focus:border-[#6A64F1] focus:shadow-md" />
+                <input onChange={handleChange}   value={formData.address_2} type="text" name="address_2" id="address_2" placeholder="Enter your Property Address 2" className="w-full rounded-md border border-green-400 bg-white py-3 px-6 text-base font-medium text-black outline-none focus:border-[#6A64F1] focus:shadow-md" />
               </div>
               <div className="mb-5">
-                <label htmlFor="address" className="mb-3 block text-base font-medium text-green-900">
+                <label htmlFor="city" className="mb-3 block text-base font-medium text-green-900">
                   City
                 </label>
-                <input type="text" name="address" id="address" placeholder="Enter your City" className="w-full rounded-md border border-green-400 bg-white py-3 px-6 text-base font-medium text-black outline-none focus:border-[#6A64F1] focus:shadow-md" />
+                <input onChange={handleChange}   value={formData.city} type="text" name="city" id="city" placeholder="Enter your City" className="w-full rounded-md border border-green-400 bg-white py-3 px-6 text-base font-medium text-black outline-none focus:border-[#6A64F1] focus:shadow-md" />
               </div>  
-              <div className="mb-5">
-                <label htmlFor="type" className="mb-3 block text-base font-medium text-green-900">
-                  Property Type
-                </label>
-                <input type="text" name="type" id="type" placeholder="Property Type eg (Apartment, Boarding House, Room ...)" className="w-full rounded-md border border-green-400 bg-white py-3 px-6 text-base font-medium text-black outline-none focus:border-[#6A64F1] focus:shadow-md" />
-              </div>
+
               <div className="mb-5">
                 <label htmlFor="description" className="mb-3 block text-base font-medium text-green-900">
                   Property Description
                 </label>
-                <textarea rows={4} name="description" id="description" placeholder="Input a short description of the Property for SEO searching eg (Key features, nearest malls, nearest stores)" className="w-full resize-none rounded-md border border-green-400 bg-white py-3 px-6 text-base font-medium text-black outline-none focus:border-[#6A64F1] focus:shadow-md" defaultValue={""} />
+                <textarea onChange={handleChange}   value={formData.description} rows={4} name="description" id="description" placeholder="Input a short description of the Property for SEO searching eg (Key features, nearest malls, nearest stores)" className="w-full resize-none rounded-md border border-green-400 bg-white py-3 px-6 text-base font-medium text-black outline-none focus:border-[#6A64F1] focus:shadow-md" defaultValue={""} />
               </div>
 
               <div className="mb-5">
@@ -69,15 +102,15 @@ const Uploadproperty = () => {
                   </div>
                 <div className="mb-5">
                   <label htmlFor="latitude" className="mb-3 block text-base font-medium text-green-900">
-                    Longitude
+                    Latitude
                   </label>
-                  <input type="text" name="latitude" id="latitude" placeholder="Enter Properties Longitude" className="w-full rounded-md border border-green-400 bg-white py-3 px-6 text-base font-medium text-black outline-none focus:border-[#6A64F1] focus:shadow-md" />
+                  <input onChange={handleChange}   value={formData.latitude} type="text" name="latitude" id="latitude" placeholder="Enter Properties Longitude" className="w-full rounded-md border border-green-400 bg-white py-3 px-6 text-base font-medium text-black outline-none focus:border-[#6A64F1] focus:shadow-md" />
                 </div>
                 <div className="mb-5">
                   <label htmlFor="longitude" className="mb-3 block text-base font-medium text-green-900">
-                    Latitude
+                    Longitude
                   </label>
-                  <input type="text" name="longitude" id="longitude" placeholder="Enter Properties Latitude" className="w-full rounded-md border border-green-400 bg-white py-3 px-6 text-base font-medium text-black outline-none focus:border-[#6A64F1] focus:shadow-md" />
+                  <input onChange={handleChange}   value={formData.longitude} type="text" name="longitude" id="longitude" placeholder="Enter Properties Latitude" className="w-full rounded-md border border-green-400 bg-white py-3 px-6 text-base font-medium text-black outline-none focus:border-[#6A64F1] focus:shadow-md" />
                 </div>
               </div>
 
@@ -87,12 +120,11 @@ const Uploadproperty = () => {
                 <label className="mb-5 block text-xl font-semibold text-green-900">
                   Upload File
                 </label>
-
                 <div className="mb-8">
-                  <input type="file" name="file" id="file" className="sr-only" onChange={handleFileChange} />
+                  <input type="file" name="images" id="images" className="sr-only cursor-pointer" onChange={handleFileChange} ref={fileInput} />
                   <label
-                    htmlFor="file"
-                    className="relative flex min-h-[200px] items-center justify-center rounded-md border border-dashed border-[#e0e0e0] p-12 text-center"
+                    htmlFor="images"
+                    className="cursor-pointer relative flex min-h-[200px] items-center justify-center rounded-md border border-dashed border-[#e0e0e0] p-12 text-center"
                   >
                     <div>
                       <span className="mb-2 block text-xl font-semibold text-green-900">
@@ -139,6 +171,7 @@ const Uploadproperty = () => {
                       </svg>
                       </button>
                     </div>
+                    <img src={previewSrc} alt="Preview" className='w-50' />
                   </div>
                 )}
                 {/* End of the file shown */}
@@ -150,17 +183,49 @@ const Uploadproperty = () => {
                 <h1 className='mb-3 block text-2xl font-bold text-green-900'>
                   Amenities
                 </h1>
-                <div className="mb-5 grid grid-cols-4 gap-2">
-                  <Checkbox label="Wifi"/>
-                  <Checkbox label="Parking Space"/>
-                  <Checkbox label="Security"/>
-                  <Checkbox label="Air Conditioned"/>
-                  <Checkbox label="Washer"/>
-                  <Checkbox label="Dryer"/>
-                  <Checkbox label="Furnished"/>
-                  <Checkbox label="Equipped Kitchen"/>
-                  <Checkbox label="Elevator"/>
-                  <Checkbox label="Near Public Transportation"/>
+                <div className="mb-5 grid grid-cols-2 md:grid-cols-4 gap-2">
+            
+                    <div>
+                        <input onChange={handleAmenityChange} id="default-checkbox" type="checkbox" value="Wifi" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                        <label for="default-checkbox" className="label-text ms-2 text-lg font-normal text-gray-900 dark:text-gray-300">Wifi</label>
+                    </div>
+                    <div>
+                        <input onChange={handleAmenityChange} id="default-checkbox" type="checkbox" value="parking" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                        <label for="default-checkbox" className="label-text ms-2 text-lg font-normal text-gray-900 dark:text-gray-300">Parking Space</label>
+                    </div>
+                    <div>
+                        <input onChange={handleAmenityChange} id="default-checkbox" type="checkbox" value="security" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                        <label for="default-checkbox" className="label-text ms-2 text-lg font-normal text-gray-900 dark:text-gray-300">Security</label>
+                    </div>
+                    <div>
+                        <input onChange={handleAmenityChange} id="default-checkbox" type="checkbox" value="aircondition" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                        <label for="default-checkbox" className="label-text ms-2 text-lg font-normal text-gray-900 dark:text-gray-300">Air Conditioned</label>
+                    </div>
+                    <div>
+                        <input onChange={handleAmenityChange} id="default-checkbox" type="checkbox" value="washer" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                        <label for="default-checkbox" className="label-text ms-2 text-lg font-normal text-gray-900 dark:text-gray-300">Washer</label>
+                    </div>
+                    <div>
+                        <input onChange={handleAmenityChange} id="default-checkbox" type="checkbox" value="dryer" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                        <label for="default-checkbox" className="label-text ms-2 text-lg font-normal text-gray-900 dark:text-gray-300">Dryer</label>
+                    </div>
+                    <div>
+                        <input onChange={handleAmenityChange} id="default-checkbox" type="checkbox" value="furnished" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                        <label for="default-checkbox" className="label-text ms-2 text-lg font-normal text-gray-900 dark:text-gray-300">Full Furnished</label>
+                    </div>
+                    <div>
+                        <input onChange={handleAmenityChange} id="default-checkbox" type="checkbox" value="kitchen" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                        <label for="default-checkbox" className="label-text ms-2 text-lg font-normal text-gray-900 dark:text-gray-300">Equipped Kitchen</label>
+                    </div>
+                    <div>
+                        <input onChange={handleAmenityChange} id="default-checkbox" type="checkbox" value="elevator" className="w-4 h-4 text-blue-600 bg-black border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                        <label for="default-checkbox" className="label-text ms-2 text-lg font-normal text-gray-900 dark:text-gray-300">Elevator</label>
+                    </div>
+                    <div>
+                        <input onChange={handleAmenityChange} id="default-checkbox" type="checkbox" value="transportation" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                        <label for="default-checkbox" className="label-text ms-2 text-lg font-normal text-gray-900 dark:text-gray-300">Near Public Transportation</label>
+                    </div>
+
                 </div>
               </div>
               {/* End of Amenities Section */}
@@ -177,19 +242,19 @@ const Uploadproperty = () => {
                   <label htmlFor="num_rooms" className="mb-3 block text-base font-medium text-green-900">
                     Number of Rooms
                   </label>
-                  <input required type="number" max={10} name="num_rooms" id="num_rooms" placeholder="Number of Rooms" className="w-full rounded-md border border-green-400 bg-white py-3 px-6 text-base font-medium text-black outline-none focus:border-[#6A64F1] focus:shadow-md" />
+                  <input onChange={handleChange}   value={formData.num_rooms} required type="number" max={10} name="num_rooms" id="num_rooms" placeholder="Number of Rooms" className="w-full rounded-md border border-green-400 bg-white py-3 px-6 text-base font-medium text-black outline-none focus:border-[#6A64F1] focus:shadow-md" />
                 </div>
                 <div className="mb-5">
                   <label htmlFor="num_bathrooms" className="mb-3 block text-base font-medium text-green-900">
                     Number of Bathrooms
                   </label>
-                  <input required type="number" max={10} name="num_bathrooms" id="num_bathrooms" placeholder="Number of Bathrooms" className="w-full rounded-md border border-green-400 bg-white py-3 px-6 text-base font-medium text-black outline-none focus:border-[#6A64F1] focus:shadow-md" />
+                  <input onChange={handleChange}   value={formData.num_bathrooms} required type="number" max={10} name="num_bathrooms" id="num_bathrooms" placeholder="Number of Bathrooms" className="w-full rounded-md border border-green-400 bg-white py-3 px-6 text-base font-medium text-black outline-none focus:border-[#6A64F1] focus:shadow-md" />
                 </div>
                 <div className="mb-5">
                   <label htmlFor="num_beds" className="mb-3 block text-base font-medium text-green-900">
                     Number of Bed
                   </label>
-                  <input required type="number" max={10} name="num_beds" id="num_beds" placeholder="Number of Beds" className="w-full rounded-md border border-green-400 bg-white py-3 px-6 text-base font-medium text-black outline-none focus:border-[#6A64F1] focus:shadow-md" />
+                  <input onChange={handleChange}   value={formData.num_beds} required type="number" max={10} name="num_beds" id="num_beds" placeholder="Number of Beds" className="w-full rounded-md border border-green-400 bg-white py-3 px-6 text-base font-medium text-black outline-none focus:border-[#6A64F1] focus:shadow-md" />
                 </div>
               </div>
               <div>
@@ -211,3 +276,14 @@ const Uploadproperty = () => {
 }
 
 export default Uploadproperty
+
+{/* <Checkbox label="Wifi"/>
+                  <Checkbox label="Parking Space"/>
+                  <Checkbox label="Security"/>
+                  <Checkbox label="Air Conditioned"/>
+                  <Checkbox label="Washer"/>
+                  <Checkbox label="Dryer"/>
+                  <Checkbox label="Furnished"/>
+                  <Checkbox label="Equipped Kitchen"/>
+                  <Checkbox label="Elevator"/>
+                  <Checkbox label="Near Public Transportation"/> */}
