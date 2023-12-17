@@ -2,6 +2,7 @@ import React, { useContext, useEffect} from "react";
 import {AuthContext, ProtectedPage} from "../authentication/AuthProvider"; // Import the AuthContext
 import Navbar from "../navbar/navbar";
 import Footer from "../footer";
+import Mobilenav from "../navbar/mobilenav";
 
 const Profile = () => {
   const user = useContext(AuthContext).user;
@@ -15,7 +16,7 @@ const Profile = () => {
   return (
     <ProtectedPage>
       <Navbar/>
-      <div className="pt-20">
+      <div className="pt-20 relative min-h-screen pb-14">
       <div className="container mx-auto my-5 p-5">
     <div className="md:flex no-wrap md:-mx-2 ">
       {/* Left Side */}
@@ -84,7 +85,7 @@ const Profile = () => {
               <div className="grid grid-cols-2">
                 <div className="px-4 py-2 font-semibold">Email.</div>
                 <div className="px-4 py-2">
-                  <a className="text-blue-800" href="mailto:jane@example.com">{user.email}</a>
+                  {user.email}
                 </div>
               </div>
               <div className="grid grid-cols-2">
@@ -99,10 +100,14 @@ const Profile = () => {
       </div>
       </div>
     </div>
-    <div className="pt-14">
+      
+      </div>
+      
+      <div className="pt-14">
       <Footer/>         
     </div>
-      
+    <div className='lg:hidden bottom-0 sticky'>
+        <Mobilenav/>
       </div>
     </ProtectedPage>
   );

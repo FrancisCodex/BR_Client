@@ -21,6 +21,9 @@ const Carousel = ({ properties }) => {
                         <path d="M12.76 3.76a6 6 0 0 1 8.48 8.48l-8.53 8.54a1 1 0 0 1-1.42 0l-8.53-8.54a6 6 0 0 1 8.48-8.48l.76.75.76-.75zm7.07 7.07a4 4 0 1 0-5.66-5.66l-1.46 1.47a1 1 0 0 1-1.42 0L9.83 5.17a4 4 0 1 0-5.66 5.66L12 18.66l7.83-7.83z" />
                       </svg>
                 </div> 
+                <div className="absolute inset-0 z-0">
+                  <img src={property.image} alt={property.title} className="w-full h-full object-cover" />
+                </div>
               </div>
                 <div className="p-4">
                   <p className="uppercase tracking-wide text-sm font-bold text-gray-700">{property.type}</p>

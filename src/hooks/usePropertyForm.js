@@ -11,35 +11,44 @@ const usePropertyForm = () => {
     address_2: '',
     city: '',
     description: '',
-    longitude: '',
-    latitude: '',
+    longitude: null,
+    latitude: null,
     num_rooms: '',
     num_bathrooms: '',
     num_beds: '',
+    listing_title: '',
+    price: '',
   });
 
   const handleAmenityChange = (event) => {
     const { value, checked } = event.target;
-    setFormData(prevState => ({
+    setFormData((prevState) => ({
       ...prevState,
       selectedAmenities: checked
         ? [...prevState.selectedAmenities, value]
-        : prevState.selectedAmenities.filter(amenity => amenity !== value),
+        : prevState.selectedAmenities.filter((amenity) => amenity !== value),
     }));
   };
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
-    setFormData(prevState => ({
+
+    // If no file is selected, reset the file input value
+    if (!selectedFile) {
+      event.target.value = null;
+    }
+
+    const previewSrc = selectedFile ? URL.createObjectURL(selectedFile) : null;
+    setFormData((prevState) => ({
       ...prevState,
       selectedFile,
-      previewSrc: URL.createObjectURL(selectedFile),
+      previewSrc,
     }));
   };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setFormData(prevState => ({
+    setFormData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
@@ -47,6 +56,7 @@ const usePropertyForm = () => {
 
   return {
     formData,
+    setFormData,
     handleAmenityChange,
     handleFileChange,
     handleChange,

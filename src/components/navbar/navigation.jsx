@@ -37,7 +37,7 @@ export default function Navigation() {
   return (
     <div>
       {/* component */}
-      <nav className={`navbar ${navbarClass} px-3 w-full flex justify-between items-center mx-auto h-20 backdrop-filter backdrop-blur-[4px] bg-white/20`}>
+      <nav className={`navbar ${navbarClass} sticky top-0 px-3 w-full flex justify-between items-center mx-auto h-20 backdrop-filter backdrop-blur-[4px] bg-white/20`}>
         {/* logo */}
         <div className="inline-flex">
           {/* Logo */}
@@ -46,7 +46,7 @@ export default function Navigation() {
               <img
                 src={logo}
                 alt="BoardRoom Logo"
-                className="inline-flex block"
+                className="inline-flex"
                 width={150}
                 height={32}
                 style={{ display: 'block' }}
@@ -58,7 +58,7 @@ export default function Navigation() {
                 alt="BoardRoom Logo Hidden"
                 width={100}
                 height={32}
-                className="inline-flex block"
+                className="inline-flex"
               />
             </div>
           </a>
@@ -68,7 +68,7 @@ export default function Navigation() {
         {/* The Catalog */}
         {isAuthenticated ? (
           <>
-            <div className="flex justify-between inline-flex hidden md:block">
+            <div className="justify-between hidden md:block">
               <div className="">
                 <ul className="flex gap-5">
                   <a href="/">

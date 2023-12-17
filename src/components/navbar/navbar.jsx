@@ -8,14 +8,30 @@ import '../../styles/navbar.css'
 import Cookies from 'js-cookie'
 
 export default function Navbar() {
-    const token = localStorage.getItem('accessToken');
+    const authContext = useContext(AuthContext);
     const isAuthenticated = useContext(AuthContext).isAuthenticated;
     const { logout } = useContext(AuthContext);
 
+    const[roleAuthenticated, setRole] = useState(false);
     const [isDropdownMenuOpen, setIsDropdownMenuOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
+    const [authenticating, setAuthenticating] = useState(true);
     
+    useEffect(() => {
+        const token = localStorage.getItem('accessToken');
+        if(token){
+            const checkRole = jwtDecode(token).role;
+            console.log("what is the user role: ", checkRole);
+            if(checkRole === 'owner' || checkRole === 'admin'){
+                setRole(true);
+            }else{
+                setRole(false);
+            }
+        }
+    }, [authContext]);
 
+    console.log("What is the setRole: ", roleAuthenticated);
+        
     
 
     const toggleDropdownMenu = () => {
@@ -37,21 +53,22 @@ export default function Navbar() {
         window.removeEventListener('scroll', handleScroll);
       };
     }, []);
+    console.log("isAuthenticated?: ", isAuthenticated);
   
     const navbarClass = isScrolled ? 'navbar scrolled' : 'navbar';
 
   return (
     <div>
         {/* component */}
-        <nav className={`navbar  w-full flex fixed justify-between items-center mx-auto px-8 h-20 ${navbarClass} backdrop-filter backdrop-blur-[4px] bg-white/20`}>
+        <nav className={`navbar top-0 fixed w-full flex justify-between items-center mx-auto px-8 h-20 ${navbarClass} backdrop-filter backdrop-blur-[4px] bg-white/20`}>
         {/* logo */}
         <div className="inline-flex">
             
             <a className="_o6689fn" href="/"><div className="hidden md:block">
-            <img src={logo} alt="BoardRoom Logo" className='inline-flex block'width={150} height={32} style={{display: 'block'}}/>
+            <img src={logo} alt="BoardRoom Logo" className=' block' width={150} height={32} style={{display: 'block'}}/>
             </div>
             <div className="block md:hidden">
-                <img src={notextlogo} alt="BoardRoom Logo Hidden" width={100} height={32} className='inline-flex block'/>
+                <img src={notextlogo} alt="BoardRoom Logo Hidden" width={100} height={32} className='inline-flex'/>
             </div>
             </a>
         </div>
@@ -60,7 +77,7 @@ export default function Navbar() {
         {/* The Catalog */}
         {isAuthenticated ? (
             <>
-            <div className="flex justify-between inline-flex hidden md:block">
+            <div className="justify-between hidden md:block">
             <div className=''>
                 <ul className='flex gap-5'>
                     <a href="/"><li>Home</li></a>
@@ -82,15 +99,26 @@ export default function Navbar() {
             <div className="flex justify-end items-center relative">
             <div className="flex mr-4 items-center">
 
-                { isAuthenticated ? (<>
-                    <a className="inline-block py-1 px-2 hover:bg-gray-200 rounded-full colored" href="/property-manager/dashboard">
-                    <div className="flex items-center relative cursor-pointer whitespace-nowrap">Manage Properties</div>
-                    </a>
+                { isAuthenticated ? (
+                <>
+                    { roleAuthenticated ? (
+                        <>
+                        <a className="inline-block py-1 px-2 hover:bg-gray-200 rounded-full colored" href="/property-manager/dashboard">
+                        <div className="flex items-center relative cursor-pointer whitespace-nowrap text-sm">Manage Properties</div>
+                        </a>
+                        </>
+                    ) : (
+                        <>
+                        <a className="inline-block py-1 px-2 hover:bg-gray-200 rounded-full colored" href="/property-manager/register">
+                            <div className="flex items-center relative cursor-pointer whitespace-nowrap">List Property</div>
+                        </a>
+                        </>
+                    )}
                 
                 </>
                 ) : (<>
-                  <a className="inline-block py-1 px-2 hover:bg-gray-200 rounded-full colored" href="/property-manager/register">
-                <div className="flex items-center relative cursor-pointer whitespace-nowrap">List Property</div>
+                <a className="inline-block py-1 px-2 hover:bg-gray-200 rounded-full colored" href="/property-manager/register">
+                    <div className="flex items-center relative cursor-pointer whitespace-nowrap">List Property</div>
                 </a>
                 </>
                 )}
@@ -127,33 +155,45 @@ export default function Navbar() {
                 </div>
             </button>
             {isDropdownMenuOpen && (
-                                <div className="dropdown-menu absolute top-full right-0 z-10 w-48 rounded-md bg-white shadow-lg">
-                                    <ul className="py-1 text-sm text-gray-700">
-                                        {isAuthenticated ? (
-                                            // Display "Profile" and "Logout" when authenticated
-                                            <>
-                                            
-                                                <li>
-                                                    <a href="/user/profile" className="block px-4 py-2 hover-bg-gray-100">Profile</a>
-                                                </li>
-                                                <li>
-                                                    <a onClick={() => logout()} href="/" className="block px-4 py-2 hover-bg-gray-100">Logout</a>
-                                                </li>
-                                            </>
-                                        ) : (
-                                            // Display "Register" and "Login" when not authenticated
-                                            <>
-                                                <li>
-                                                    <a href="/register" className="block px-4 py-2 hover-bg-gray-100">Register</a>
-                                                </li>
-                                                <li>
-                                                    <a href="/auth/login" className="block px-4 py-2 hover-bg-gray-100">Login</a>
-                                                </li>
-                                            </>
-                                        )}
-                                    </ul>
-                                </div>
-                            )}
+    <div className="dropdown-menu absolute top-full right-0 z-10 w-48 rounded-md bg-white shadow-lg">
+      <ul className="py-1 text-sm text-gray-700">
+        {isAuthenticated ? (
+                // Display "Profile" and "Logout" when authenticated
+                <>
+                    <li>
+                    <a href="/user/profile" className="block px-4 py-2 hover-bg-gray-100">Profile</a>
+                    </li>
+                    {roleAuthenticated && (
+                    <>
+                        <li>
+                        <a href="/manager/dashboard" className="block px-4 py-2 hover-bg-gray-100">Dashboard</a>
+                        </li>
+                        <li>
+                        <a href="/manager/upload" className="block px-4 py-2 hover-bg-gray-100">Upload Property</a>
+                        </li>
+                    </>
+                    )}
+                    <li>
+                    <a href="/listings" className="block px-4 py-2 hover-bg-gray-100">Listings</a>
+                    </li>
+                    <li>
+                    <a onClick={() => logout()} href="/" className="block px-4 py-2 hover-bg-gray-100">Logout</a>
+                    </li>
+                </>
+                ) : (
+                // Display "Register" and "Login" when not authenticated
+                <>
+                    <li>
+                    <a href="/register" className="block px-4 py-2 hover-bg-gray-100">Register</a>
+                    </li>
+                    <li>
+                    <a href="/auth/login" className="block px-4 py-2 hover-bg-gray-100">Login</a>
+                    </li>
+                </>
+                )}
+            </ul>
+            </div>
+        )}
             </div>
 
             </div>

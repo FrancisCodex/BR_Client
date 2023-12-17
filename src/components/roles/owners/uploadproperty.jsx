@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react'
+import React, {useState, useRef, useCallback} from 'react'
 import Navbar from '../../navbar/navbar'
 import Mapcontainer from '../../map/mapcontainer'
 import { Checkbox } from "@material-tailwind/react";
@@ -6,42 +6,52 @@ import Footer from '../../footer';
 import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
 import usePropertyForm from '../../../hooks/usePropertyForm';
+import instance from '../../../hooks/useRefreshToken';
 
 const Uploadproperty = () => {
   const token = localStorage.getItem('accessToken');
   const fileInput = useRef();
   const {
     formData,
-    selectedFile,
+    setFormData,
     handleAmenityChange,
     handleFileChange,
     handleChange,
   } = usePropertyForm();
 
+  const handleCoordinatesChange = useCallback((coordinates) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      longitude: coordinates.longitude,
+      latitude: coordinates.latitude,
+    }));
+  }, [setFormData]);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+  
     const { selectedFile, selectedAmenities, ...restFormData } = formData;
-
+  
     const formDataToSend = new FormData();
     formDataToSend.append('images', selectedFile);
-
+  
     Object.entries(restFormData).forEach(([key, value]) => {
       formDataToSend.append(key, value);
     });
-
+  
+  
     selectedAmenities.forEach((amenity, index) => {
       formDataToSend.append(`amenities[${index}]`, amenity);
     });
-
     try {
-      const response = await axios.post('http://localhost:8080/api/property/upload', formDataToSend, {
+      const response = await instance.post('/api/property/upload', formDataToSend, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
-
+  
       if (response.status === 200) {
+        
         console.log('File uploaded successfully');
         toast.success("Property uploaded successfully!");
       }
@@ -61,6 +71,12 @@ const Uploadproperty = () => {
               <h1 className="text-3xl font-semibold text-green-900">Upload Property</h1>
           </div>
             <form action="#" onSubmit={handleSubmit}>
+            <div className="mb-5">
+                  <label htmlFor="listing_title" className="mb-3 block text-base font-medium text-green-900">
+                    Listing Title
+                  </label>
+                  <input onChange={handleChange}  value={formData.listing_title} type="text" name="listing_title" id="listing_title" placeholder="Enter Listing Title" className="w-full rounded-md border border-green-400 bg-white py-3 px-6 text-base font-medium text-black outline-none focus:border-[#6A64F1] focus:shadow-md" />
+                </div>
                 <div className="mb-5">
                   <label htmlFor="type" className="mb-3 block text-base font-medium text-green-900">
                     Property Type
@@ -90,7 +106,7 @@ const Uploadproperty = () => {
                 <label htmlFor="description" className="mb-3 block text-base font-medium text-green-900">
                   Property Description
                 </label>
-                <textarea onChange={handleChange}   value={formData.description} rows={4} name="description" id="description" placeholder="Input a short description of the Property for SEO searching eg (Key features, nearest malls, nearest stores)" className="w-full resize-none rounded-md border border-green-400 bg-white py-3 px-6 text-base font-medium text-black outline-none focus:border-[#6A64F1] focus:shadow-md" defaultValue={""} />
+                <textarea onChange={handleChange}   value={formData.description} rows={4} name="description" id="description" placeholder="Input a short description of the Property for SEO searching eg (Key features, nearest malls, nearest stores)" className="w-full resize-none rounded-md border border-green-400 bg-white py-3 px-6 text-base font-medium text-black outline-none focus:border-[#6A64F1] focus:shadow-md" />
               </div>
 
               <div className="mb-5">
@@ -98,7 +114,7 @@ const Uploadproperty = () => {
                   Property Location and Images
                 </h1>
                   <div className="mb-5">
-                    <Mapcontainer/>
+                    <Mapcontainer onCoordinatesChange={handleCoordinatesChange}/>
                   </div>
                 <div className="mb-5">
                   <label htmlFor="latitude" className="mb-3 block text-base font-medium text-green-900">
@@ -142,13 +158,13 @@ const Uploadproperty = () => {
                   </label>
                 </div>
                 {/* Show when there is a file being uploaded */}
-                {selectedFile && (
+                {formData.selectedFile && (
                   <div className="mb-5 rounded-md bg-[#F5F7FB] py-4 px-8">
                     <div className="flex items-center justify-between">
                       <span className="truncate pr-3 text-base font-medium text-green-900">
-                        {selectedFile.name}
+                        {formData.selectedFile.name}
                       </span>
-                      <button className="text-green-900" onClick={() => setSelectedFile(null)}>
+                      <button className="text-green-900" onClick={() => handleFileChange({ target: { name: 'images', files: [] } })}>
                       <svg
                         width="10"
                         height="10"
@@ -171,7 +187,7 @@ const Uploadproperty = () => {
                       </svg>
                       </button>
                     </div>
-                    <img src={previewSrc} alt="Preview" className='w-50' />
+                    <img src={formData.previewSrc} alt="Preview" className="w-50" />
                   </div>
                 )}
                 {/* End of the file shown */}
@@ -187,43 +203,43 @@ const Uploadproperty = () => {
             
                     <div>
                         <input onChange={handleAmenityChange} id="default-checkbox" type="checkbox" value="Wifi" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label for="default-checkbox" className="label-text ms-2 text-lg font-normal text-gray-900 dark:text-gray-300">Wifi</label>
+                        <label htmlFor="default-checkbox" className="label-text ms-2 text-lg font-normal text-gray-900 dark:text-gray-300">Wifi</label>
                     </div>
                     <div>
                         <input onChange={handleAmenityChange} id="default-checkbox" type="checkbox" value="parking" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label for="default-checkbox" className="label-text ms-2 text-lg font-normal text-gray-900 dark:text-gray-300">Parking Space</label>
+                        <label htmlFor="default-checkbox" className="label-text ms-2 text-lg font-normal text-gray-900 dark:text-gray-300">Parking Space</label>
                     </div>
                     <div>
                         <input onChange={handleAmenityChange} id="default-checkbox" type="checkbox" value="security" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label for="default-checkbox" className="label-text ms-2 text-lg font-normal text-gray-900 dark:text-gray-300">Security</label>
+                        <label htmlFor="default-checkbox" className="label-text ms-2 text-lg font-normal text-gray-900 dark:text-gray-300">Security</label>
                     </div>
                     <div>
                         <input onChange={handleAmenityChange} id="default-checkbox" type="checkbox" value="aircondition" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label for="default-checkbox" className="label-text ms-2 text-lg font-normal text-gray-900 dark:text-gray-300">Air Conditioned</label>
+                        <label htmlFor="default-checkbox" className="label-text ms-2 text-lg font-normal text-gray-900 dark:text-gray-300">Air Conditioned</label>
                     </div>
                     <div>
                         <input onChange={handleAmenityChange} id="default-checkbox" type="checkbox" value="washer" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label for="default-checkbox" className="label-text ms-2 text-lg font-normal text-gray-900 dark:text-gray-300">Washer</label>
+                        <label htmlFor="default-checkbox" className="label-text ms-2 text-lg font-normal text-gray-900 dark:text-gray-300">Washer</label>
                     </div>
                     <div>
                         <input onChange={handleAmenityChange} id="default-checkbox" type="checkbox" value="dryer" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label for="default-checkbox" className="label-text ms-2 text-lg font-normal text-gray-900 dark:text-gray-300">Dryer</label>
+                        <label htmlFor="default-checkbox" className="label-text ms-2 text-lg font-normal text-gray-900 dark:text-gray-300">Dryer</label>
                     </div>
                     <div>
                         <input onChange={handleAmenityChange} id="default-checkbox" type="checkbox" value="furnished" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label for="default-checkbox" className="label-text ms-2 text-lg font-normal text-gray-900 dark:text-gray-300">Full Furnished</label>
+                        <label htmlFor="default-checkbox" className="label-text ms-2 text-lg font-normal text-gray-900 dark:text-gray-300">Full Furnished</label>
                     </div>
                     <div>
                         <input onChange={handleAmenityChange} id="default-checkbox" type="checkbox" value="kitchen" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label for="default-checkbox" className="label-text ms-2 text-lg font-normal text-gray-900 dark:text-gray-300">Equipped Kitchen</label>
+                        <label htmlFor="default-checkbox" className="label-text ms-2 text-lg font-normal text-gray-900 dark:text-gray-300">Equipped Kitchen</label>
                     </div>
                     <div>
                         <input onChange={handleAmenityChange} id="default-checkbox" type="checkbox" value="elevator" className="w-4 h-4 text-blue-600 bg-black border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label for="default-checkbox" className="label-text ms-2 text-lg font-normal text-gray-900 dark:text-gray-300">Elevator</label>
+                        <label htmlFor="default-checkbox" className="label-text ms-2 text-lg font-normal text-gray-900 dark:text-gray-300">Elevator</label>
                     </div>
                     <div>
                         <input onChange={handleAmenityChange} id="default-checkbox" type="checkbox" value="transportation" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label for="default-checkbox" className="label-text ms-2 text-lg font-normal text-gray-900 dark:text-gray-300">Near Public Transportation</label>
+                        <label htmlFor="default-checkbox" className="label-text ms-2 text-lg font-normal text-gray-900 dark:text-gray-300">Near Public Transportation</label>
                     </div>
 
                 </div>
@@ -255,6 +271,12 @@ const Uploadproperty = () => {
                     Number of Bed
                   </label>
                   <input onChange={handleChange}   value={formData.num_beds} required type="number" max={10} name="num_beds" id="num_beds" placeholder="Number of Beds" className="w-full rounded-md border border-green-400 bg-white py-3 px-6 text-base font-medium text-black outline-none focus:border-[#6A64F1] focus:shadow-md" />
+                </div>
+                <div className="mb-5">
+                  <label htmlFor="price" className="mb-3 block text-base font-medium text-green-900">
+                    Price per Month
+                  </label>
+                  <input onChange={handleChange}   value={formData.price} required type="number" name="price" id="price" placeholder="Price per month" className="w-full rounded-md border border-green-400 bg-white py-3 px-6 text-base font-medium text-black outline-none focus:border-[#6A64F1] focus:shadow-md" />
                 </div>
               </div>
               <div>

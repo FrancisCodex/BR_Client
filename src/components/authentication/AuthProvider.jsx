@@ -43,6 +43,33 @@ const AuthProvider = ({ children }) => {
       // Add error handling code here
     }
   };
+
+  const login = async (formData) => {
+    try {
+      const response = await axios.post("http://localhost:8080/api/user/login", formData);
+      const token = response.data.token;
+      const accessToken = response.data.accessToken;
+      const decodedToken = jwtDecode(token);
+
+      if (response.status === 200) {
+        Cookies.set('token', token, { expires: 7 });
+        localStorage.setItem('accessToken', accessToken);
+        console.log('login successfully');
+
+        const userData = await fetchUserData(accessToken);
+        setUser(userData);
+        setIsAuthenticated(true);
+
+        return decodedToken;
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        throw new Error('Wrong email or password.');
+      } else {
+        throw new Error('An error occurred.');
+      }
+    }
+  };
   
   
 
@@ -92,7 +119,7 @@ const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, logout, user }}>
+    <AuthContext.Provider value={{ isAuthenticated, logout, login, user }}>
       {children}
     </AuthContext.Provider>
   );

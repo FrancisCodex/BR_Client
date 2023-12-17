@@ -1,4 +1,6 @@
 import './App.css'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Login from './components/login'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Home from './components/home'
@@ -18,6 +20,8 @@ import OwnerDashboard from './components/roles/owners/ownerDashboard'
 import RoleCheck from './components/authentication/roleCheck'
 import { ThemeProvider } from "@material-tailwind/react";
 import Testupload from './components/roles/owners/testupload'
+import PropertyDetails from './components/properties/propertydetails'
+import Propertypage from './components/properties/propertypage'
 
 
 function App() {
@@ -28,7 +32,7 @@ function App() {
     ADMIN: ['admin']
   };
   
-  console.log("What is the role: ", ROLES.GENERAL);
+  console.log("What is the role: ", ROLES.MANAGERS);
   return (
     <>
       <AuthProvider>
@@ -44,16 +48,17 @@ function App() {
 
               {/* Protected Routes */}
               <Route path='/user/profile' element={<ProtectedPage> <RoleCheck allowedRoles={ROLES.GENERAL}> <Profile /> </RoleCheck> </ProtectedPage>} />
-              <Route path='/listings' element={<ProtectedPage> <Listings/> </ProtectedPage>}/>
               <Route path='/map' element={<Mapcontainer/>}/>
-
+              <Route path='/property/:propertyId' element={<PropertyDetails/>}/>
+              <Route path='/prop/:propertId' element={<Propertypage/>}/>
               {/* Routes that take Parameters */}
               <Route path='/user/verified' element={<Verifyemail/>}/>
+              <Route path='/listings' element={<ProtectedPage> <Listings/> </ProtectedPage>}/>
 
               {/* Property Pages {Only Admin and Owners Should access this page} */}
-              <Route path='/property-manager/dashboard' element={<ProtectedPage> <RoleCheck allowedRoles={ROLES.MANAGERS}> <OwnerDashboard/> </RoleCheck></ProtectedPage>}/>
-              <Route path='/property-manager/upload' element={<ProtectedPage> <RoleCheck allowedRoles={ROLES.MANAGERS}> <Uploadproperty/> </RoleCheck> </ProtectedPage>}/>
-              <Route path='/property-manager/listings/:id' element={<ProtectedPage> <RoleCheck allowedRoles={ROLES.MANAGERS}> <Listproperty/> </RoleCheck></ProtectedPage>}/>
+              <Route path='/manager/dashboard' element={<ProtectedPage> <RoleCheck allowedRoles={ROLES.MANAGERS}> <OwnerDashboard/> </RoleCheck></ProtectedPage>}/>
+              <Route path='/manager/upload' element={<ProtectedPage> <RoleCheck allowedRoles={ROLES.MANAGERS}> <Uploadproperty/> </RoleCheck> </ProtectedPage>}/>
+              <Route path='/manager/listings/:id' element={<ProtectedPage> <RoleCheck allowedRoles={ROLES.MANAGERS}> <Listproperty/> </RoleCheck></ProtectedPage>}/>
               
               
               {/* Footer Links */}
@@ -64,6 +69,7 @@ function App() {
               <Route path='*' element={<Errorpage/>}/>
               <Route path='/unauthorized' element={<Unauthorized/>}/>
             </Routes>
+            <ToastContainer closeOnClick={false} />
           </BrowserRouter>
         </ThemeProvider>
       </AuthProvider>

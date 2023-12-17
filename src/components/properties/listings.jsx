@@ -1,115 +1,124 @@
-import React from 'react';
-import Mapdef from '../map/mapdef';
-import Card from '../cards/card';
-import Navbar from '../navbar/navbar';
-import Searchbar from './searchbar';
-import realtor from '../../assets/realtor2.png';
-import Navigation from '../navbar/navigation';
+import React, { useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import Maplisting from '../map/maplisting';
 import Cardtest from '../cards/cardtest';
+import Navigation from '../navbar/navigation';
+import Searchbar from './searchbar';
+import axios from 'axios';
+import instance from '../../hooks/useRefreshToken';
+import Mobilenav from '../navbar/mobilenav';
+import { useListing } from '../../hooks/useListing';
+import '../../styles/listings.css';
 
 const Listings = () => {
+  const {
+    property,
+    isDropdownMenuOpen,
+    setIsDropdownMenuOpen,
+    isNavVisible,
+    setIsNavVisible,
+    lastScrollPos,
+    setLastScrollPos,
+    scrollContainerRef,
+    setSortOrder,
+    sortOrder,
+  } = useListing();
 
-  const properties = [
-    {
-      id: 1,
-      title: "Property 1",
-      description: "3 bedroom 1 bathroom apartment",
-      image: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&q=80&w=1974&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      price: 5025.12,
-      persons: 2,
-      bathrooms: 1,
-      rooms: 2,
-      type: "Apartment",
-      renter: "Donald Trump",
-      address: "1252 Golden State, Butuan City",
-      realtor: realtor
+  const [searchTerm, setSearchTerm] = useState('');
 
-    },
-    {
-      id: 2,
-      title: "Property 2",
-      description: "4 bedroom 1 bathroom apartment, Shared Bathroom",
-      image: "https://images.unsplash.com/photo-1560185009-5bf9f2849488?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      price: 4500.51,
-      persons: 4,
-      bathrooms: 1,
-      rooms: 2,
-      type: "Apartment",
-      renter: "Gerald Oswalt",
-      address: "1413 Libertad, Butuan City",
-      realtor: realtor
+  const lowerCaseSearchTerm = searchTerm.toLowerCase();
 
-    },
-    {
-      id: 3,
-      title: "Property 3",
-      description: "2 bedroom 2 bathroom apartment",
-      image: "https://images.unsplash.com/photo-1585412727339-54e4bae3bbf9?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      price: 4800.42,
-      persons: 4,
-      bathrooms: 1,
-      rooms: 1,
-      type: "Boarding House",
-      renter: "Gerald Oswalt",
-      address: "2314 Los Angeles, Butuan City",
-      realtor: realtor
+  const filteredProperties = property ? property.filter((property) =>
+  (property.description && property.description.toLowerCase().includes(lowerCaseSearchTerm)) ||
+  (property.amenities && property.amenities.some(amenity => amenity.toLowerCase().includes(lowerCaseSearchTerm))) ||
+  (property.type && property.type.toLowerCase().includes(lowerCaseSearchTerm)) ||
+  (property.listing_name && property.listing_name.toLowerCase().includes(lowerCaseSearchTerm)) ||
+  (property.city && property.city.toLowerCase().includes(lowerCaseSearchTerm)) ||
+  (property.address && property.address.toLowerCase().includes(lowerCaseSearchTerm))
+) : [];
 
-    },
-    {
-      id: 4,
-      title: "Property 3",
-      description: "2 bedroom 2 bathroom apartment",
-      image: "https://images.unsplash.com/photo-1564078516393-cf04bd966897?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      price: 4850.23,
-      persons: 6,
-      bathrooms: 2,
-      rooms: 2,
-      type: "Boarding House",
-      renter: "Gerald Oswalt",
-      address: "1521 New York Dakota, Butuan City",
-      realtor: realtor
+useEffect(() => {
+  // Fetch and sort data here
+}, [sortOrder]);
 
-    },
-  ];
-
-
+  console.log("What is the property in listing: ", property);
   return (
-    <div className='h-screen overflow-hidden'>
-      <Navigation/>
-        <div className="listings-container">
-            <div className="flex flex-col">
-                <div className="searchbar pt-4">
-                <Searchbar/>
-                </div>
-                <div className="flex screenSize">
-                {/* Left Side */}
-                <div className="relative w-full pl-2 lg:w-6/12 lg:mx-0 mt-5 inset-0">
-                  <Maplisting  />
-                </div>
-
-                {/* Right Side */}
-                <div className='flex-1 flex h-full'>
-                    <div className="flex-1 w-full overflow-y-scroll lg:w-6/12 mx-2 mt-5">
-                        <div className="h-60">
-                          <div className='pl-3'>
-                            <h1 className='font-bold text-2xl'>Available Rental Listings</h1>
-                            {/* How many Properties that are listed */}
-                            <p className='text-zinc-600 font-medium'>{properties.length} Properties listed</p>
+    <div className='h-screen'>
+        <Navigation />
+        
+      <div className="listings-container">
+        <div className="flex flex-col">
+          <div className="searchbar pt-0 md:pt-4">
+            <Searchbar searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
+          </div>
+          <div className="flex screenSize">
+            {/* Left Side */}
+            <div className="relative w-full pl-2 lg:w-6/12 lg:mx-0 mt-5 inset-0 lg:block hidden">
+              <Maplisting properties={property}/>
+            </div> 
+  
+            {/* Right Side */}
+            <div className='flex-1 flex h-full  sm:mb-10'>
+              <div className="flex-1 w-full overflow-y-scroll lg:w-6/12 mx-2 mt-5" ref={scrollContainerRef}>
+                <div className="h-60">
+                <div className='pl-3'>
+                  <h1 className='font-bold text-2xl'>Available Rental Listings</h1>
+                  {/* How many Properties that are listed */}
+                  <div className="flex items-center justify-between py-0">
+                    <p className='text-zinc-600 font-medium'>{(searchTerm ? filteredProperties : property)?.length} Properties listed</p>
+                    <div className="relative">
+                      <button  onClick={() => setIsDropdownMenuOpen(!isDropdownMenuOpen)} className="flex text-black bg-gray-200 items-center justify-end w-40 text-sm font-semibold text-left bg-transparent rounded-lg ">
+                        <span>Sort by</span>
+                        <svg fill="currentColor" viewBox="0 0 20 20" className={`w-4 h-4 transition-transform duration-200 transform ${isDropdownMenuOpen ? 'rotate-180' : ''}`}>
+                          <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                        </svg>
+                      </button>
+                      {isDropdownMenuOpen &&(
+                        <div className="absolute z-50 w-full  origin-top-right">
+                        <div className="px-2 pt-2 pb-2 bg-white rounded-md shadow-lg dark-mode:bg-gray-700">
+                          <div className="flex flex-col">
+                            <a className="flex flex-row items-start rounded-lg bg-transparent p-2 hover:bg-gray-200 " href="#" onClick={() => setSortOrder('lowest')}>
+                              <div className>
+                                <p className="font-semibold">Lowest Price</p>
+                              </div>
+                            </a>
+                            <a className="flex flex-row items-start rounded-lg bg-transparent p-2 hover:bg-gray-200 " href="#" onClick={() => setSortOrder('highest')}>
+                              <div className>
+                                <p className="font-semibold">Highest Price</p>
+                              </div>
+                            </a>
+                            <a className="flex flex-row items-start rounded-lg bg-transparent p-2 hover:bg-gray-200 " href="#">
+                              <div className>
+                                <p className="font-semibold">Top Rating</p>
+                              </div>
+                            </a>
                           </div>
-                            <div className="columns-2 w-full gap-2 pt-3">
-                                {properties.map((property) => (
-                                <Cardtest key={property.id} property={property}/>
-                                ))}
-                            </div>
                         </div>
+                      </div>
+                      )}
+                      </div> 
                     </div>
-                    <div className="my-4"/>
-                </div>
 
+                  </div>
+                  <div className="grid-columns-2 w-full gap-2 pt-3">
+                  {(searchTerm ? filteredProperties : property)?.map((property) => (
+    <Cardtest key={property.property_id} property={property} imageUrl={property.imageUrl} />
+  ))}
+                  </div>
                 </div>
+              </div>
+              
+              <div className="my-4"/>
             </div>
-            </div>
+  
+          </div>
+        </div>
+      </div>
+      {isNavVisible && (
+        <div className='lg:hidden z-99'>
+          <Mobilenav/>
+        </div>
+      )}
     </div>
   );
 };

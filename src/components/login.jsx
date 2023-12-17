@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import logo from '../assets/BoardRoomLogo_Light.svg'
@@ -8,72 +8,42 @@ import Footer from './footer';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import { jwtDecode } from 'jwt-decode';
+import { AuthContext } from './authentication/AuthProvider';
 
 
 export default function Login() {
-
+  const {login} = useContext(AuthContext);
   const [error, setError] = useState(null);
+  const [roleAuthenticated, setRole] = useState(false);
 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-
+  const navigate = useNavigate();
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-  const navigate = useNavigate();
-  
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      // Make a POST request to your backend API for login
-      const response = await axios.post("http://localhost:8080/api/user/login", formData);
-    
-      const token = response.data.token;
-      const accessToken = response.data.accessToken;
-
-      const decodedToken = jwtDecode(token);
-
-      console.log(decodedToken.role);
-    
-      console.log("The formData: ", response);
-      console.log("the Response: ", token);
-    
-      if(response.status === 200){
-      // Store the token in a secure way (e.g., localStorage or cookies)
-      Cookies.set('token', token, { expires: 7 });
-      localStorage.setItem('accessToken', accessToken);
-      console.log('login successfully');
-      // window.location.href = '/';
-      toast.success("Login successfully!");
-      // Redirect to a protected route or dashboard
-      // if the user role is renter, redirect to home page
-      setTimeout(() => {
-        if (decodedToken.role === 'renter') {
-          navigate('/');
-        } else if (decodedToken.role === 'owner') { //if the user role is owner, redirect to owner dashboard
-          navigate('/property-manager/dashboard');
-        } else if (decodedToken.role === 'admin') { //if the user role is admin, redirect to admin dashboard
-          navigate('/admin/dashboard');
-        }
-      }, 2000);
+      const response = await login(formData);
+      console.log("What is the response: ", response);
+      const checkRole = response.role;
+      console.log("what is the user role: ", checkRole);
+      if(checkRole === 'owner' || checkRole === 'admin'){
+        navigate('/manager/dashboard');
+        toast.success('Login successful!');
+      }else{
+        navigate('/');
+        toast.success('Login successful!');
       }
-      
     } catch (error) {
-      console.error("Error occurred:", error);
-      if (error.response && error.response.status === 401) {
-        // Handle authentication failure (show an error message)
-        toast.error("Wrong email or password.");
-        console.error("Authentication failed.");
-      } else {
-        toast.error("An error occurred.");
-      }
+      toast.error(error.message);
     }
   };
-  
+
   return (
     <div>
       <ToastContainer />
