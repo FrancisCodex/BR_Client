@@ -103,13 +103,13 @@ export default function Navbar() {
                 <>
                     { roleAuthenticated ? (
                         <>
-                        <a className="inline-block py-1 px-2 hover:bg-gray-200 rounded-full colored" href="/property-manager/dashboard">
+                        <a className="inline-block py-1 px-2 hover:bg-gray-200 rounded-full colored" href="/manager/dashboard">
                         <div className="flex items-center relative cursor-pointer whitespace-nowrap text-sm">Manage Properties</div>
                         </a>
                         </>
                     ) : (
                         <>
-                        <a className="inline-block py-1 px-2 hover:bg-gray-200 rounded-full colored" href="/property-manager/register">
+                        <a className="inline-block py-1 px-2 hover:bg-gray-200 rounded-full colored" href="/manager/register">
                             <div className="flex items-center relative cursor-pointer whitespace-nowrap">List Property</div>
                         </a>
                         </>
@@ -117,7 +117,7 @@ export default function Navbar() {
                 
                 </>
                 ) : (<>
-                <a className="inline-block py-1 px-2 hover:bg-gray-200 rounded-full colored" href="/property-manager/register">
+                <a className="inline-block py-1 px-2 hover:bg-gray-200 rounded-full colored" href="/manager/register">
                     <div className="flex items-center relative cursor-pointer whitespace-nowrap">List Property</div>
                 </a>
                 </>

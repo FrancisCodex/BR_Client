@@ -25,16 +25,22 @@ const Listings = () => {
   } = useListing();
 
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedAmenities, setSelectedAmenities] = useState([]);
+  const [selectedType, setSelectedType] = useState('');
+  const [priceRange, setPriceRange] = useState([0, 10000]);
 
   const lowerCaseSearchTerm = searchTerm.toLowerCase();
 
+  const propertyTypes = property ? Array.from(new Set(property.map(p => p.property_type))) : [];
+
   const filteredProperties = property ? property.filter((property) =>
-  (property.description && property.description.toLowerCase().includes(lowerCaseSearchTerm)) ||
-  (property.amenities && property.amenities.some(amenity => amenity.toLowerCase().includes(lowerCaseSearchTerm))) ||
-  (property.type && property.type.toLowerCase().includes(lowerCaseSearchTerm)) ||
+  (!searchTerm || (property.description && property.description.toLowerCase().includes(lowerCaseSearchTerm)) ||
   (property.listing_name && property.listing_name.toLowerCase().includes(lowerCaseSearchTerm)) ||
   (property.city && property.city.toLowerCase().includes(lowerCaseSearchTerm)) ||
-  (property.address && property.address.toLowerCase().includes(lowerCaseSearchTerm))
+  (property.address && property.address.toLowerCase().includes(lowerCaseSearchTerm))) &&
+  (!selectedAmenities.length || (property.amenities && property.amenities.some(amenity => selectedAmenities.includes(amenity.toLowerCase())))) &&
+  (!selectedType || (property.property_type && property.property_type.toString().toLowerCase() === selectedType.toLowerCase())) &&
+  (property.price && property.price >= priceRange[0] && property.price <= priceRange[1])
 ) : [];
 
 useEffect(() => {
@@ -49,7 +55,17 @@ useEffect(() => {
       <div className="listings-container">
         <div className="flex flex-col">
           <div className="searchbar pt-0 md:pt-4">
-            <Searchbar searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
+          <Searchbar 
+            searchTerm={searchTerm} 
+            setSearchTerm={setSearchTerm}
+            selectedAmenities={selectedAmenities} 
+            setSelectedAmenities={setSelectedAmenities} 
+            selectedType={selectedType} 
+            setSelectedType={setSelectedType} 
+            priceRange={priceRange} 
+            setPriceRange={setPriceRange}
+            propertyTypes={propertyTypes} 
+          />
           </div>
           <div className="flex screenSize">
             {/* Left Side */}
@@ -101,9 +117,9 @@ useEffect(() => {
 
                   </div>
                   <div className="grid-columns-2 w-full gap-2 pt-3">
-                  {(searchTerm ? filteredProperties : property)?.map((property) => (
-    <Cardtest key={property.property_id} property={property} imageUrl={property.imageUrl} />
-  ))}
+                    {filteredProperties.map((property) => (
+                      <Cardtest key={property.property_id} property={property} imageUrl={property.imageUrl} />
+                    ))}
                   </div>
                 </div>
               </div>

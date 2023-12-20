@@ -24,3 +24,10 @@ body {
 .screenSize{
   height: 83dvh;
 }
+
+.mapboxgl-popup-close-button {
+  background-image: url('path-to-your-custom-icon.png');
+  width: 20px;
+  height: 20px;
+  background-size: cover;
+}

@@ -44,13 +44,13 @@ function App() {
               <Route path='/' element={<Home/>}/>
               <Route path='/auth/login' element={<Login/>}/>
               <Route path='/register' element={<Signup/>}/>
-              <Route path='/property-manager/register' element={<OwnerRegister/>}/>
+              <Route path='/manager/register' element={<OwnerRegister/>}/>
 
               {/* Protected Routes */}
               <Route path='/user/profile' element={<ProtectedPage> <RoleCheck allowedRoles={ROLES.GENERAL}> <Profile /> </RoleCheck> </ProtectedPage>} />
-              <Route path='/map' element={<Mapcontainer/>}/>
-              <Route path='/property/:propertyId' element={<PropertyDetails/>}/>
-              <Route path='/prop/:propertId' element={<Propertypage/>}/>
+              <Route path='/map' element={<Mapcontainer/>}/> 
+              <Route path='/property/:propertyId' element={<ProtectedPage> <PropertyDetails/> </ProtectedPage>}/>
+              <Route path='/prop/:propertId' element={<ProtectedPage> <Propertypage/> </ProtectedPage>}/>
               {/* Routes that take Parameters */}
               <Route path='/user/verified' element={<Verifyemail/>}/>
               <Route path='/listings' element={<ProtectedPage> <Listings/> </ProtectedPage>}/>

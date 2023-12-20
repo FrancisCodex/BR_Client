@@ -2,15 +2,33 @@ import React, {useState, useEffect, useContext} from 'react'
 import logo from '../../assets/BoardRoomLogo.svg'
 import notextlogo from '../../assets/BoardRoom_Logo_notext.svg'
 import { AuthContext } from '../authentication/AuthProvider'
+import { jwtDecode } from 'jwt-decode'
 import '../../styles/navbar.css'
 
 export default function Navigation() {
     const token = localStorage.getItem('authToken');
     const isAuthenticated = useContext(AuthContext).isAuthenticated;
     const { logout } = useContext(AuthContext);
+    const authContext = useContext(AuthContext);
 
+
+    const[roleAuthenticated, setRole] = useState(false);
     const [isDropdownMenuOpen, setIsDropdownMenuOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
+
+    useEffect(() => {
+      const token = localStorage.getItem('accessToken');
+      if(token){
+          const checkRole = jwtDecode(token).role;
+          console.log("what is the user role: ", checkRole);
+          if(checkRole === 'owner' || checkRole === 'admin'){
+              setRole(true);
+          }else{
+              setRole(false);
+          }
+      }
+    }, [authContext]);
+
   
     const toggleDropdownMenu = () => {
       setIsDropdownMenuOpen(!isDropdownMenuOpen);
@@ -95,9 +113,29 @@ export default function Navigation() {
         <div className="flex-initial">
             <div className="flex justify-end items-center relative">
             <div className="flex mr-4 items-center">
-                <a className="inline-block py-1 px-2 hover:bg-gray-200 rounded-full colored" href="/property-manager/register">
-                <div className="flex items-center relative cursor-pointer whitespace-nowrap">List Property</div>
-                </a>
+              { isAuthenticated ? (
+                  <>
+                      { roleAuthenticated ? (
+                          <>
+                          <a className="inline-block py-1 px-2 hover:bg-gray-200 rounded-full colored" href="/manager/dashboard">
+                          <div className="flex items-center relative cursor-pointer whitespace-nowrap text-sm">Manage Properties</div>
+                          </a>
+                          </>
+                      ) : (
+                          <>
+                          <a className="inline-block py-1 px-2 hover:bg-gray-200 rounded-full colored" href="/manager/register">
+                              <div className="flex items-center relative cursor-pointer whitespace-nowrap">List Property</div>
+                          </a>
+                          </>
+                      )}
+                  
+                  </>
+                  ) : (<>
+                  <a className="inline-block py-1 px-2 hover:bg-gray-200 rounded-full colored" href="/manager/register">
+                      <div className="flex items-center relative cursor-pointer whitespace-nowrap">List Property</div>
+                  </a>
+                  </>
+                  )}
                 <div className="block relative">
                 <button type="button" className="inline-block py-2 px-3 hover:bg-gray-200 rounded-full relative">
                     <div className="flex items-center h-5">

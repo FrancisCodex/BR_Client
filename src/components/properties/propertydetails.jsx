@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import instance from '../../hooks/useRefreshToken';
 import Navbar from '../navbar/navbar';
@@ -7,14 +7,14 @@ import Footer from '../footer';
 import '../../styles/prop.scss'
 import Reviewsection from './reviewsection';
 import OwnerCard from './ownerCard';
+import Contactform from './contactform';
 
 const PropertyDetails = () => {
   const [property, setProperty] = useState(null);
   const [propertyImage, setPropertyImage] = useState(null);
   const { propertyId } = useParams();
 
-  console.log("What is the property id: ", propertyId);
-
+  
   useEffect(() => {
     const fetchPropertyDetails = async () => {
       try {
@@ -93,10 +93,11 @@ const PropertyDetails = () => {
                 <div className="description">
                     <p>{property.propertyDetails.property_description}</p>
                 </div>
-                  <button className="add-to-cart bg-green-800">Contact Owner</button>    
+                  {/* <button className="add-to-cart bg-green-800">Contact Owner</button>     */}
+                  <Contactform/>
                 </div>
                 <div className='reviewsection'>
-                    <Reviewsection/>
+                <Reviewsection propertyId={propertyId}/>
                 </div>
             </div>
         </div>

@@ -1,72 +1,110 @@
-import React from 'react'
+import React, {useState, useEffect, useContext} from 'react'
+import { Rating } from "@material-tailwind/react";
+import instance from '../../hooks/useRefreshToken';
+import { AuthContext } from '../authentication/AuthProvider';
 
-const Reviewsection = () => {
+const Reviewsection = ({ propertyId }) => {
+    const [reviews, setReviews] = useState([]);
+  const [rating, setRating] = useState(0);
+  const [reviewText, setReviewText] = useState('');
+  const user = useContext(AuthContext).user;
+  const token = localStorage.getItem('accessToken');
+
+  const property_id = propertyId;
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    const reviewData = {
+      property_id,
+      rating,
+      reviewText
+    };
+
+    try {
+      const response = await instance.post('/api/reviews', reviewData, {
+        headers: { Authorization: `Bearer ${token}` }, // Assuming the user object has a token property
+      });
+
+      // Handle response...
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+
+    useEffect(() => {
+        const fetchReviews = async () => {
+          try {
+            const response = await instance.get(`/api/reviews/get/${propertyId}`); // Replace '/api/reviews' with your actual endpoint
+            setReviews(response.data);
+          } catch (error) {
+            console.error(error);
+          }
+        };
+        fetchReviews();
+      }, [propertyId]);
+      console.log('reviews ', reviews);
+    
   return (
     <div className='w-full pt-5'>
-        <div className="bg-gray-950 max-w-full min-h-screen ">
-            <div className="px-10 flex flex-col gap-2 p-5 bg-gray-100 text-black">
-                <h1 className="py-5 text-lg">Reviews</h1>
-                <div className="flex bg-gray-600 bg-opacity-20 border border-gray-200 rounded-md">
-                <input type="email" name="email" id="email" placeholder="Search Review" className="p-2 bg-transparent focus:outline-none" />
-                </div>
-                {/* Item Container */}
-                <div className="flex flex-col gap-3 mt-14">
-                <div className="flex flex-col gap-4 outline p-4">
-                    {/* Profile and Rating */}
-                    <div className="flex justify justify-between">
-                    <div className="flex gap-2">
-                        <div className="w-7 h-7 text-center rounded-full bg-red-500">J</div>
-                        <span>Jess Hopkins</span>
-                    </div>
-                    <div className="flex p-1 gap-1 text-orange-300">
-                        5 STARS
-                    </div>
-                    </div>
-                    <div className='w-full'>
-                    Gorgeous design! Even more responsive than the previous version. A pleasure to use!
-                    </div>
-                    <div className="flex justify-between">
-                    <span>Feb 13, 2021</span>
-                    </div>
-                </div>
-                <div className="flex flex-col gap-4 outline p-4">
+    <div className="bg-gray-950 max-w-full min-h-screen ">
+      <div className="px-10 flex flex-col gap-2 p-5 bg-gray-100 text-black">
+        <h1 className="py-5 text-lg font-semibold">{reviews.length} Reviews</h1>
+        {/* Item Container */}
+        <div className="flex flex-col gap-3 mt-3">
+          {reviews.length > 0 ? (
+            reviews.map((review) => (
+              <div className="flex flex-col gap-4 outline p-4" key={review.review_id}>
+                {/* Profile and Rating */}
                 <div className="flex justify justify-between">
-                    <div className="flex gap-2">
-                        <div className="w-7 h-7 text-center rounded-full bg-yellow-500">A</div>
-                        <span>Alice Banks</span>
-                    </div>
-                    <div className="flex p-1 gap-1 text-orange-300">
-                        5 STARS
-                    </div>
-                    </div>
-                    <div>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor unde voluptates assumenda tempora numquam eaque praesentium quis dicta cum, pariatur amet mollitia fugit ab cupiditate officia dignissimos quidem optio. Corrupti.
-                    Voluptatem quibusdam nesciunt exercitationem soluta vel labore laudantium veritatis necessitatibus ut porro. Deserunt asperiores quisquam animi quia, aut sequi, dicta eum numquam modi, sint est accusantium et sapiente? Vero, illo.
-                    Repellendus laudantium, quibusdam quos facilis id optio asperiores pariatur eveniet, nihil perferendis est minima fugiat in deserunt sint tempora molestiae ut inventore! Deserunt sunt ipsam id quae debitis ea sit.
-                    Maxime at beatae quas exercitationem obcaecati accusantium sit eveniet animi voluptatem, quaerat rerum a quis saepe! Quaerat aliquid facere eius exercitationem qui vero ducimus aperiam cupiditate magnam porro. Illum, delectus.
-                    Minima illo animi reiciendis qui at tempore consequatur ipsum sed, et, dicta, accusamus velit perferendis voluptate libero facere voluptatibus nemo. Illo ipsum excepturi vel minus saepe rerum pariatur, est at!
-                    </div>
-                    <div className="flex justify-between">
-                    <span>Feb 13, 2021</span>
-                    </div>
+                  <div className="flex gap-2">
+                  <div className="w-7 h-7 text-center rounded-full bg-green-500">{review.first_name.charAt(0)}</div>
+                    <span>{review.first_name}</span>
+                  </div>
+                  <div className="flex p-1 gap-1 text-orange-300">
+                  <Rating value={review.rating} readonly />
+                  </div>
                 </div>
+                <div className='w-full'>
+                  {review.review_text}
                 </div>
+                <div className="flex justify-between">
+                  <span>{review.date}</span>
+                </div>
+                <div className="flex justify-between text-gray-600">
+                <span>
+                posted on {new Date(review.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                </span>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p>There are no reviews</p>
+          )}
+        </div>
+            {user.role !== 'owner' ? (
+            <div className="mt-10">
+                <h2 className="text-lg">Add a review</h2>
+                <form onSubmit={handleSubmit}>
+                <div className="mt-4">
+                    <label htmlFor="rating" className="block text-lg font-semibold">Rating</label>
+                    <Rating unratedColor="amber" ratedColor="amber" onChange={setRating} />
+                </div>
+                <div className="mt-4">
+                    <label htmlFor="review" className="block text-lg font-semibold">Review</label>
+                    <textarea id="review" name="review" rows="4" className="w-full mt-2 p-2 border border-gray-300 rounded-md" value={reviewText} onChange={(e) => setReviewText(e.target.value)}></textarea>
+                </div>
+                <div className="mt-4">
+                    <button type="submit" className="px-4 py-2 bg-green-800 text-white rounded-md">Submit</button>
+                </div>
+                </form>
+            </div>
+            ) : (
                 <div className="mt-10">
-                    <h2 className="text-lg">Add your review</h2>
-                    <form>
-                        <div className="mt-4">
-                            <label htmlFor="rating" className="block">Rating</label>
-                            <input type="number" id="rating" name="rating" min="1" max="5" className="w-full mt-2 p-2 border border-gray-300 rounded-md" />
-                        </div>
-                        <div className="mt-4">
-                            <label htmlFor="review" className="block">Review</label>
-                            <textarea id="review" name="review" rows="4" className="w-full mt-2 p-2 border border-gray-300 rounded-md"></textarea>
-                        </div>
-                        <div className="mt-4">
-                            <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-md">Submit</button>
-                        </div>
-                    </form>
+                <p>You are not allowed to review</p>
                 </div>
+            )}
             </div>
         </div>
     </div>
