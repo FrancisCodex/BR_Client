@@ -10,6 +10,7 @@ export const useListing = () => {
     const [lastScrollPos, setLastScrollPos] = useState(0);
     const scrollContainerRef = useRef(null);
     const [sortOrder, setSortOrder] = useState(null);
+    const [RatingOrder, setRatingOrder] = useState(null);
 
     useEffect(() => {
         const handleScroll = () => {

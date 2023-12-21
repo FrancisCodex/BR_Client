@@ -103,7 +103,7 @@ useEffect(() => {
                                 <p className="font-semibold">Highest Price</p>
                               </div>
                             </a>
-                            <a className="flex flex-row items-start rounded-lg bg-transparent p-2 hover:bg-gray-200 " href="#">
+                            <a className="flex flex-row items-start rounded-lg bg-transparent p-2 hover:bg-gray-200 " href="#" onClick={() => setSortOrder('rating')}>
                               <div className>
                                 <p className="font-semibold">Top Rating</p>
                               </div>

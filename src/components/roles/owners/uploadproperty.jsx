@@ -6,7 +6,6 @@ import Footer from '../../footer';
 import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
 import usePropertyForm from '../../../hooks/usePropertyForm';
-import instance from '../../../hooks/useRefreshToken';
 
 const Uploadproperty = () => {
   const token = localStorage.getItem('accessToken');
@@ -14,7 +13,7 @@ const Uploadproperty = () => {
   const {
     formData,
     setFormData,
-    handleAmenityChange,
+        handleAmenityChange,
     handleFileChange,
     handleChange,
   } = usePropertyForm();
@@ -43,16 +42,16 @@ const Uploadproperty = () => {
     selectedAmenities.forEach((amenity, index) => {
       formDataToSend.append(`amenities[${index}]`, amenity);
     });
+
     try {
-      const response = await instance.post('/api/property/upload', formDataToSend, {
+      const response = await axios.post('http://localhost:8080/api/property/upload', formDataToSend, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
   
       if (response.status === 200) {
-        
-        console.log('File uploaded successfully');
+                console.log('File uploaded successfully');
         toast.success("Property uploaded successfully!");
       }
     } catch (error) {

@@ -12,6 +12,7 @@ import Contactform from './contactform';
 const PropertyDetails = () => {
   const [property, setProperty] = useState(null);
   const [propertyImage, setPropertyImage] = useState(null);
+  const [ownerdetails, setOwnerdetails] = useState(null);
   const { propertyId } = useParams();
 
   
@@ -28,6 +29,21 @@ const PropertyDetails = () => {
 
     fetchPropertyDetails();
   }, [propertyId]);
+
+  useEffect(() => {
+    const fetchOwnerDetails = async () => {
+      try {
+        if (property && property.propertyDetails) {
+          const response = await instance.get(`/api/property/owner/${property.propertyDetails.user_id}`);
+          setOwnerdetails(response.data);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  
+    fetchOwnerDetails();
+  }, [property]);
 
   const filename = property?.imageDetails.image_name;
   console.log("what is the image name: ", filename);
@@ -93,6 +109,18 @@ const PropertyDetails = () => {
                 <div className="description">
                     <p>{property.propertyDetails.property_description}</p>
                 </div>
+                <h2 className='text-xl font-extrabold'>Amenities</h2>
+                <div className="amenities space-y-2 gap-2 pb-3 md:w-48 md:flex">
+                  {property.propertyDetails.amenities.map((amenity, index) => (
+                    <div key={index} className="flex items-center px-4 py-2 border border-gray-300 rounded shadow-sm text-sm font-semibold text-black bg-white capitalize">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-green-500" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586l-1.293-1.293a1 1 0 10-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      {amenity}
+                    </div>
+                  ))}
+                </div>
+                <OwnerCard ownerdetails={ownerdetails}/>
                   {/* <button className="add-to-cart bg-green-800">Contact Owner</button>     */}
                   <Contactform/>
                 </div>
